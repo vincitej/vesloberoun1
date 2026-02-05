@@ -1,11 +1,8 @@
 {
-  "homepage": "https://vincitej.github.io/vesloberoun-web",
   "name": "vesloberoun-web",
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -28,7 +25,6 @@
     "@types/react-dom": "^18.3.5",
     "eslint": "^9.18.0",
     "eslint-config-next": "^15.1.5",
-    "gh-pages": "^6.3.0",
     "typescript": "^5.7.3"
   }
 }
