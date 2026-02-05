@@ -1,0 +1,64 @@
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 0%,
+    #f8f8f8 50%,
+    #f0f0f0 100%
+  );
+  background-size: 1000px 100%;
+}
+
+.textSkeleton {
+  composes: skeleton;
+  height: 16px;
+  border-radius: 4px;
+  margin-bottom: var(--spacing-2);
+}
+
+.titleSkeleton {
+  composes: skeleton;
+  height: 24px;
+  width: 70%;
+  border-radius: 4px;
+  margin-bottom: var(--spacing-3);
+}
+
+.imageSkeleton {
+  composes: skeleton;
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: var(--border-radius-md);
+}
+
+.cardSkeleton {
+  background: var(--color-white);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.contentSkeleton {
+  padding: var(--spacing-4);
+}
+
+.gallerySkeleton {
+  aspect-ratio: 4/3;
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+}
+
+.galleryImageSkeleton {
+  composes: skeleton;
+  width: 100%;
+  height: 100%;
+}

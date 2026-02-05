@@ -1,0 +1,124 @@
+.article {
+  margin-bottom: var(--spacing-12);
+}
+
+.heroImage {
+  width: 100%;
+  height: 500px;
+  overflow: hidden;
+  margin-bottom: var(--spacing-12);
+}
+
+.heroImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.articleContent {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-4);
+}
+
+.articleHeader {
+  text-align: center;
+  margin-bottom: var(--spacing-12);
+}
+
+.category {
+  display: inline-block;
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  margin-bottom: var(--spacing-4);
+}
+
+.category.zavod {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.category.treninky {
+  background-color: var(--color-accent);
+  color: var(--color-white);
+}
+
+.category.akce {
+  background-color: var(--color-secondary);
+  color: var(--color-white);
+}
+
+.category.uspech {
+  background-color: #ffd700;
+  color: var(--color-gray-900);
+}
+
+.articleHeader h1 {
+  font-size: var(--font-size-5xl);
+  margin-bottom: var(--spacing-6);
+  line-height: 1.2;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-3);
+  color: var(--color-gray-600);
+  font-size: var(--font-size-base);
+}
+
+.date {
+  font-weight: var(--font-weight-medium);
+}
+
+.separator {
+  color: var(--color-gray-400);
+}
+
+.author {
+  color: var(--color-gray-600);
+}
+
+.content {
+  font-size: var(--font-size-lg);
+  line-height: 1.8;
+  color: var(--color-gray-800);
+}
+
+.content p {
+  margin-bottom: var(--spacing-6);
+}
+
+.articleFooter {
+  margin-top: var(--spacing-12);
+  padding-top: var(--spacing-8);
+  border-top: 1px solid var(--color-gray-200);
+}
+
+@media (max-width: 768px) {
+  .heroImage {
+    height: 300px;
+    margin-bottom: var(--spacing-8);
+  }
+
+  .articleHeader h1 {
+    font-size: var(--font-size-3xl);
+  }
+
+  .meta {
+    flex-direction: column;
+    gap: var(--spacing-1);
+  }
+
+  .separator {
+    display: none;
+  }
+
+  .content {
+    font-size: var(--font-size-base);
+  }
+}

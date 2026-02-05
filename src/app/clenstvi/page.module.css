@@ -1,0 +1,467 @@
+.stepsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-6);
+  margin-top: var(--spacing-8);
+}
+
+.step {
+  text-align: center;
+  padding: var(--spacing-4);
+}
+
+.stepNumber {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto var(--spacing-4);
+  background: linear-gradient(
+    135deg,
+    var(--color-secondary),
+    var(--color-primary-dark)
+  );
+  color: var(--color-white);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.step h3 {
+  margin-bottom: var(--spacing-3);
+}
+
+.step p {
+  color: var(--color-gray-200);
+  line-height: 1.6;
+}
+
+/* Rozvrh */
+.subtitle {
+  text-align: center;
+  font-size: var(--font-size-lg);
+  color: var(--color-gray-500);
+  margin-bottom: var(--spacing-8);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.seasonDescription {
+  text-align: center;
+  max-width: 800px;
+  margin: var(--spacing-6) auto;
+  color: var(--color-gray-200);
+  line-height: 1.6;
+  font-size: var(--font-size-lg);
+}
+
+.scheduleGrid {
+  display: grid;
+  gap: var(--spacing-6);
+  margin-top: var(--spacing-8);
+}
+
+.scheduleCard h3 {
+  font-size: var(--font-size-xl);
+  color: var(--color-white);
+  margin-bottom: var(--spacing-4);
+  padding-bottom: var(--spacing-3);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.scheduleDays {
+  display: grid;
+  gap: var(--spacing-4);
+}
+
+.scheduleDay {
+  display: grid;
+  grid-template-columns: 100px 140px 1fr;
+  gap: var(--spacing-4);
+  align-items: center;
+  padding: var(--spacing-4);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(12px);
+}
+
+.dayName {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-white);
+}
+
+.dayTime {
+  color: var(--color-primary-light);
+  font-weight: var(--font-weight-medium);
+}
+
+.dayDetails {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-200);
+}
+
+.coach {
+  margin-top: var(--spacing-1);
+  font-style: italic;
+}
+
+.divisionDescription {
+  color: var(--color-gray-300);
+  margin-bottom: var(--spacing-4);
+  font-size: var(--font-size-md);
+}
+
+.seasonCard {
+  margin-top: var(--spacing-6);
+  margin-bottom: var(--spacing-8);
+}
+
+.seasonContent h3 {
+  font-size: var(--font-size-xl);
+  color: var(--color-white);
+  margin-bottom: var(--spacing-4);
+}
+
+.seasonContent p {
+  color: var(--color-gray-200);
+  line-height: 1.6;
+  margin-bottom: var(--spacing-6);
+}
+
+.seasonsContainer {
+  display: grid;
+  gap: var(--spacing-8);
+}
+
+.seasonBlock {
+  display: flex;
+  flex-direction: column;
+}
+
+.seasonBlock:not(:first-child) {
+  border-top: 1px solid var(--glass-border);
+  padding-top: var(--spacing-8);
+}
+
+@media (min-width: 900px) {
+  .seasonsContainer {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-8);
+  }
+
+  .seasonBlock:not(:first-child) {
+    border-top: none;
+    border-left: 1px solid var(--glass-border);
+    padding-top: 0;
+    padding-left: var(--spacing-8);
+  }
+}
+
+.seasonTitle {
+  font-size: var(--font-size-lg);
+  color: var(--color-primary-light);
+  margin-bottom: var(--spacing-1);
+  font-weight: var(--font-weight-bold);
+}
+
+.seasonMonths {
+  color: var(--color-gray-400);
+  font-size: var(--font-size-xs);
+  margin-bottom: var(--spacing-3) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.activitiesGrid {
+  display: grid;
+  gap: var(--spacing-4);
+  margin-top: var(--spacing-4);
+}
+
+.activityGroup {
+  background: rgba(255, 255, 255, 0.03);
+  padding: var(--spacing-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border);
+}
+
+.activityGroup h5 {
+  color: var(--color-white);
+  font-size: var(--font-size-md);
+  margin-bottom: var(--spacing-2);
+  font-weight: var(--font-weight-semibold);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.activityGroup h5::before {
+  content: "";
+  display: block;
+  width: 4px;
+  height: 1.2em;
+  background: var(--color-primary);
+  border-radius: var(--radius-sm);
+}
+
+.activityList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+}
+
+.activityItem {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2px var(--spacing-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-300);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  border: 1px solid var(--glass-border);
+}
+
+.activityIcon {
+  color: var(--color-primary);
+  font-weight: bold;
+}
+
+/* CTA */
+.ctaSection {
+  /* background: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-primary-dark) 100%
+  ); */
+  color: var(--color-white);
+  padding: var(--spacing-20) 0;
+  text-align: center;
+}
+
+.ctaSection h2 {
+  color: var(--color-white);
+  margin-bottom: var(--spacing-4);
+}
+
+.ctaSection p {
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--spacing-8);
+}
+
+.ctaButtons {
+  display: flex;
+  gap: var(--spacing-4);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .stepsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .pricesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .scheduleDay {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-2);
+  }
+
+  .dayName {
+    font-size: var(--font-size-lg);
+  }
+
+  .ctaSection {
+    padding: var(--spacing-12) 0;
+  }
+
+  .ctaButtons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.heroFade {
+  mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+}
+
+/* Dokumenty ke stažení */
+.downloadsSection {
+  margin-top: var(--spacing-12);
+  text-align: center;
+  padding: var(--spacing-8);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  backdrop-filter: blur(12px);
+}
+
+.downloadsSection h3 {
+  color: var(--color-white);
+  margin-bottom: var(--spacing-6);
+  font-size: var(--font-size-2xl);
+}
+
+.downloadButtons {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-4);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .downloadButtons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* Member Cards (similar to Contact Person) */
+.memberSection {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.memberCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--spacing-6);
+  height: 100%;
+  margin-bottom: var(--spacing-6);
+}
+
+/* .memberCard:hover removed as Card component handles it */
+
+.memberCardHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+.memberIcon {
+  font-size: var(--font-size-4xl);
+  background: rgba(255, 255, 255, 0.05);
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-bottom: var(--spacing-2);
+}
+
+.memberIcon img {
+  filter: brightness(0) invert(1);
+}
+
+.memberCard h3 {
+  font-size: var(--font-size-2xl);
+  color: var(--color-white);
+  margin: 0;
+}
+
+.memberCard p {
+  color: var(--color-gray-200);
+  margin: 0;
+  max-width: 500px;
+}
+
+.memberActions {
+  display: flex;
+  gap: var(--spacing-4);
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .memberActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.imageGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-6);
+  width: 100%;
+  max-width: 100%;
+  margin: var(--spacing-4) auto 0;
+  padding: 0 var(--spacing-4);
+  box-sizing: border-box;
+}
+
+.imageItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-3);
+  width: 200px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.imageWrapper {
+  width: 100%;
+  aspect-ratio: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: all var(--transition-base);
+}
+
+.clothingImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-base);
+}
+
+.imageItem:hover .imageWrapper {
+  border-color: var(--color-primary-light);
+  box-shadow: var(--glass-shadow);
+}
+
+.imageItem:hover .clothingImage {
+  transform: scale(1.05);
+}
+
+.imageItem p {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-200);
+}
+
+.imagePlaceholder {
+  width: 100%;
+  aspect-ratio: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-3xl);
+  transition: all var(--transition-base);
+}
+
+.imageItem:hover .imagePlaceholder {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.05);
+}

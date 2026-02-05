@@ -1,0 +1,385 @@
+.dashboardLayout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--color-gray-50);
+}
+
+.mainContent {
+  flex: 1;
+  margin-left: 280px; /* Width of sidebar */
+  padding: var(--spacing-8);
+  max-width: calc(100vw - 280px);
+}
+
+.pageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-8);
+}
+
+.pageTitle {
+  font-size: var(--font-size-3xl);
+  color: var(--color-gray-900);
+  font-weight: 700;
+}
+
+.card {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: var(--spacing-6);
+  margin-bottom: var(--spacing-6);
+  border: 1px solid var(--color-gray-200);
+}
+
+.primaryBtn {
+  background: var(--color-primary);
+  color: white;
+  padding: var(--spacing-3) var(--spacing-6);
+  border-radius: var(--radius-md);
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.primaryBtn:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(42, 67, 145, 0.2);
+}
+
+.secondaryBtn {
+  background: white;
+  color: var(--color-gray-700);
+  padding: var(--spacing-3) var(--spacing-6);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-gray-300);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.secondaryBtn:hover {
+  background: var(--color-gray-50);
+  border-color: var(--color-gray-400);
+}
+
+.dangerBtn {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-md);
+  border: none;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dangerBtn:hover {
+  background: #fecaca;
+}
+
+/* Forms */
+.formGrid {
+  display: grid;
+  gap: var(--spacing-6);
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.label {
+  font-weight: 600;
+  color: var(--color-gray-700);
+  font-size: var(--font-size-sm);
+}
+
+.input,
+.textarea,
+.select {
+  padding: var(--spacing-3);
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  transition: all 0.2s;
+  background: white;
+  color: var(--color-gray-900);
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(42, 67, 145, 0.1);
+}
+
+/* Table styles */
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+.table th {
+  text-align: left;
+  padding: var(--spacing-4);
+  background: var(--color-gray-50);
+  border-bottom: 2px solid var(--color-gray-200);
+  color: var(--color-gray-600);
+  font-weight: 600;
+}
+
+.table td {
+  padding: var(--spacing-4);
+  border-bottom: 1px solid var(--color-gray-200);
+  color: var(--color-gray-700);
+  vertical-align: middle;
+}
+
+.table tr:hover {
+  background: var(--color-gray-50);
+}
+
+.statusBadge {
+  display: inline-flex;
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Gallery Grid */
+.galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spacing-6);
+}
+
+.galleryCard {
+  background: white;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--color-gray-200);
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.galleryCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.galleryThumbnail {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  background: var(--color-gray-100);
+}
+
+.galleryContent {
+  padding: var(--spacing-4);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.galleryTitle {
+  font-weight: 600;
+  margin-bottom: var(--spacing-4);
+  color: var(--color-gray-900);
+  flex: 1;
+}
+
+.galleryCard p {
+  color: var(--color-gray-600);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--spacing-3);
+}
+
+.galleryActions {
+  display: flex;
+  gap: var(--spacing-2);
+  margin-top: auto;
+}
+
+.galleryActions button {
+  flex: 1;
+  padding: 6px;
+  font-size: 13px;
+}
+
+/* Text Color Overrides for Admin (Light Theme) */
+.card p,
+.card li,
+.card span,
+.card div,
+.table td,
+.input,
+.textarea,
+.select {
+  color: var(--color-gray-900);
+}
+
+.label {
+  color: var(--color-gray-700);
+}
+
+.quill {
+  position: relative;
+}
+
+/* React Quill Editor Specific Overrides */
+.quill :global(.ql-container.ql-snow) {
+  border-color: var(--color-gray-300) !important;
+  background: white;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  font-family: var(--font-sans); /* Ensure font consistency */
+}
+
+.quill :global(.ql-toolbar.ql-snow) {
+  border-color: var(--color-gray-300) !important;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  background: var(--color-gray-50);
+  padding: 12px !important;
+  font-size: 16px !important;
+  overflow: visible !important;
+}
+
+.quill :global(.ql-toolbar.ql-snow .ql-formats) {
+  margin-right: 20px !important;
+}
+
+.quill :global(.ql-toolbar.ql-snow button),
+.quill :global(.ql-toolbar.ql-snow .ql-picker-label) {
+  width: 36px !important;
+  height: 36px !important;
+  padding: 6px !important;
+  position: relative;
+}
+
+.quill :global(.ql-toolbar.ql-snow button svg),
+.quill :global(.ql-toolbar.ql-snow .ql-picker-label svg) {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+/* Tooltips for ReactQuill buttons */
+.quill :global(.ql-toolbar.ql-snow button):hover::after,
+.quill :global(.ql-toolbar.ql-snow .ql-picker-label):hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.quill :global(.ql-toolbar.ql-snow button):hover::before,
+.quill :global(.ql-toolbar.ql-snow .ql-picker-label):hover::before {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-bottom-color: rgba(0, 0, 0, 0.9);
+  z-index: 1001;
+  pointer-events: none;
+}
+
+.quill :global(.ql-toolbar.ql-snow button) {
+  position: relative;
+}
+
+.quill :global(.ql-snow .ql-picker) {
+  font-size: 15px !important;
+}
+
+.quill :global(.ql-editor) {
+  color: var(--color-gray-900) !important;
+  min-height: 250px !important;
+  font-size: 15px !important;
+}
+
+.quill :global(.ql-editor p) {
+  color: var(--color-gray-900) !important;
+  margin-bottom: 0.8em;
+}
+
+.quill :global(.ql-editor h1),
+.quill :global(.ql-editor h2),
+.quill :global(.ql-editor h3) {
+  color: var(--color-gray-900) !important;
+}
+
+/* Admin Global Text Reset */
+.mainContent h1,
+.mainContent h2,
+.mainContent h3 {
+  color: var(--color-gray-900);
+}
+
+.galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spacing-6);
+}
+
+.galleryCard {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--color-gray-200);
+  transition: transform 0.2s;
+}
+
+.galleryCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.galleryThumbnail {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+
+.galleryContent {
+  padding: var(--spacing-4);
+}
+
+.galleryTitle {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  margin-bottom: var(--spacing-2);
+  color: var(--color-gray-900);
+}
+
+.galleryActions {
+  display: flex;
+  gap: var(--spacing-2);
+  margin-top: var(--spacing-4);
+}

@@ -1,0 +1,284 @@
+.contactGrid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: var(--spacing-8);
+  align-items: start;
+}
+
+.contactInfoCentered {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.contactInfo {
+  position: sticky;
+  top: calc(var(--header-height) + var(--spacing-4));
+}
+
+.infoCard {
+  padding: var(--spacing-4);
+}
+
+.infoCard > *:last-child {
+  margin-bottom: 0;
+}
+
+.infoCard h2 {
+  font-size: var(--font-size-2xl);
+  color: var(--color-white);
+  margin-bottom: var(--spacing-6);
+}
+
+.infoItem {
+  display: flex;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
+  padding-bottom: var(--spacing-6);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.infoItem:last-of-type {
+  border-bottom: none;
+}
+
+.infoIcon {
+  font-size: var(--font-size-3xl);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.infoIcon img {
+  filter: brightness(0) invert(1);
+}
+
+.infoItem h3 {
+  font-size: var(--font-size-base);
+  color: var(--color-white);
+  margin-bottom: var(--spacing-2);
+}
+
+.heroFade {
+  mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+}
+
+.infoItem p {
+  color: var(--color-gray-200);
+  line-height: 1.6;
+}
+
+.infoItem a {
+  color: var(--color-primary-light);
+  text-decoration: none;
+}
+
+.infoItem a:hover {
+  text-decoration: underline;
+  color: var(--color-white);
+}
+
+/* Kontaktní osoby */
+.contactPerson {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
+  backdrop-filter: blur(12px);
+  transition: all var(--transition-base);
+}
+
+.contactPerson:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--color-primary-light);
+  transform: translateY(-4px);
+  box-shadow: var(--glass-shadow);
+}
+
+.personHeader {
+  display: flex;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-3);
+}
+
+.personHeader .infoIcon {
+  font-size: var(--font-size-2xl);
+}
+
+.personHeader h3 {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-300);
+  margin-bottom: var(--spacing-1);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.personName {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-white);
+  margin: 0;
+}
+
+.personContacts {
+  margin-left: calc(var(--font-size-2xl) + var(--spacing-4));
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.contactDetail {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: var(--font-size-sm);
+}
+
+.smallIcon {
+  font-size: var(--font-size-base);
+  opacity: 0.7;
+}
+.contactDetail a {
+  color: var(--color-primary-light);
+  text-decoration: none;
+}
+
+.contactDetail a:hover {
+  text-decoration: underline;
+  color: var(--color-white);
+}
+
+.socialLinks {
+  margin-top: var(--spacing-6);
+}
+
+.socialLinks h3 {
+  font-size: var(--font-size-base);
+  margin-bottom: var(--spacing-4);
+}
+
+.socialIcons {
+  display: flex;
+  gap: var(--spacing-4);
+}
+
+.socialIcons a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background-color: var(--glass-bg);
+  color: var(--color-white);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.socialIcons a:hover {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  transform: translateY(-2px);
+}
+
+/* Formulář */
+.form {
+  padding: var(--spacing-4);
+}
+
+.form h2 {
+  font-size: var(--font-size-2xl);
+  margin-bottom: var(--spacing-6);
+}
+
+.successMessage {
+  background-color: #d4edda;
+  color: #155724;
+  padding: var(--spacing-4);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-6);
+  border: 1px solid #c3e6cb;
+}
+
+.formGroup {
+  margin-bottom: var(--spacing-6);
+}
+
+.formGroup label {
+  display: block;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-900);
+  margin-bottom: var(--spacing-2);
+}
+
+.formGroup input,
+.formGroup select,
+.formGroup textarea {
+  width: 100%;
+  padding: var(--spacing-3) var(--spacing-4);
+  border: 2px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-family: var(--font-sans);
+  transition: border-color var(--transition-fast);
+}
+
+.formGroup input:focus,
+.formGroup select:focus,
+.formGroup textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.formGroup textarea {
+  resize: vertical;
+}
+
+/* Mapa */
+.mapSection {
+  padding: var(--spacing-16) 0;
+}
+
+.mapSection h2 {
+  text-align: center;
+  margin-bottom: var(--spacing-8);
+}
+
+.mapContainer {
+  max-width: 1000px;
+  margin: 0 auto;
+  height: 450px;
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  box-shadow: var(--glass-shadow);
+  border: 1px solid var(--glass-border);
+}
+
+.mapContainer iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 1024px) {
+  .contactGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .contactInfo {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .mapSection {
+    padding: var(--spacing-12) 0;
+  }
+
+  .mapContainer {
+    height: 350px;
+  }
+}

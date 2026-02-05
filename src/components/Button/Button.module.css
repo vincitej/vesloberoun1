@@ -1,0 +1,94 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-full);
+  transition: all var(--transition-base);
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid var(--glass-border);
+  font-family: var(--font-sans);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--glass-shadow);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Velikosti */
+.sm {
+  padding: var(--spacing-2) var(--spacing-4);
+  font-size: var(--font-size-sm);
+}
+
+.md {
+  padding: var(--spacing-3) var(--spacing-6);
+  font-size: var(--font-size-base);
+}
+
+.lg {
+  padding: var(--spacing-4) var(--spacing-8);
+  font-size: var(--font-size-lg);
+}
+
+/* Varianty */
+.primary {
+  background: linear-gradient(
+    90deg,
+    var(--color-primary-light),
+    var(--color-primary-dark)
+  );
+  color: var(--color-white);
+  transition: all var(--transition-base), color var(--transition-fast);
+}
+
+.primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #0a84ff, #4dabff);
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 20px 40px rgba(10, 132, 255, 0.35);
+  color: var(--color-white);
+}
+
+.primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.secondary {
+  background: linear-gradient(
+    90deg,
+    var(--color-secondary-light),
+    var(--color-secondary-dark)
+  );
+  color: var(--color-white);
+  transition: all var(--transition-base), color var(--transition-fast);
+}
+
+.secondary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #d65565, #8a1722);
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 20px 40px rgba(255, 55, 95, 0.35);
+  color: var(--color-white);
+}
+
+.secondary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.outline {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--glass-border);
+  color: var(--color-white);
+}
+
+.outline:hover:not(:disabled) {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(255, 255, 255, 0.08)
+  );
+  color: var(--color-white);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+}

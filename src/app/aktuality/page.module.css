@@ -1,0 +1,23 @@
+.articlesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: var(--spacing-6);
+}
+
+.noArticles {
+  text-align: center;
+  padding: var(--spacing-20) var(--spacing-4);
+  color: var(--color-gray-600);
+  font-size: var(--font-size-lg);
+}
+
+@media (max-width: 768px) {
+  .articlesGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.heroFade {
+  mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+}

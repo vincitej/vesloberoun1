@@ -1,0 +1,34 @@
+{
+  "homepage": "https://vincitej.github.io/vesloberoun-web",
+  "name": "vesloberoun-web",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "better-sqlite3": "^11.8.1",
+    "next": "^15.1.5",
+    "next-auth": "^5.0.0-beta.25",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-quill": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22.10.5",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "eslint": "^9.18.0",
+    "eslint-config-next": "^15.1.5",
+    "gh-pages": "^6.3.0",
+    "typescript": "^5.7.3"
+  }
+}

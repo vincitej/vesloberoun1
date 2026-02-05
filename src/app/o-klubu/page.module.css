@@ -1,0 +1,439 @@
+.historyContent {
+  max-width: 1280px;
+  margin: var(--spacing-6) auto;
+}
+
+.historyContent p {
+  font-size: var(--font-size-base);
+  line-height: 1.65;
+  color: var(--color-gray-500);
+  margin-bottom: var(--spacing-4);
+}
+
+.subtitle {
+  text-align: center;
+  font-size: var(--font-size-base);
+  color: var(--color-gray-500);
+  margin-bottom: var(--spacing-8);
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Page Titles - Unified h2 Style */
+.pageTitle {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-white);
+  margin-bottom: var(--spacing-6);
+  padding-bottom: var(--spacing-3);
+  position: relative;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Milníky */
+.milestones {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-4);
+  margin-top: var(--spacing-8);
+}
+
+.milestone {
+  text-align: center;
+  padding: var(--spacing-4);
+}
+
+.year {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-extrabold);
+  color: var(--color-secondary);
+  margin-bottom: var(--spacing-3);
+}
+
+.heroFade {
+  mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+}
+
+.milestoneText {
+  font-size: var(--font-size-base);
+  color: var(--color-gray-200);
+}
+
+/* Úspěchy */
+.achievements {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.yearSection {
+  margin-bottom: var(--spacing-10);
+}
+
+.yearTitle {
+  font-size: var(--font-size-3xl);
+  color: var(--color-primary-light);
+  margin-bottom: var(--spacing-6);
+  padding-bottom: var(--spacing-3);
+  position: relative;
+}
+
+.yearTitle::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--color-primary-light),
+    var(--color-primary-dark)
+  );
+  border-radius: var(--radius-full);
+}
+
+.achievementsList {
+  display: grid;
+  gap: var(--spacing-3);
+}
+
+.achievement {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.place {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-size: var(--font-size-2xl);
+  margin-bottom: var(--spacing-2);
+}
+
+.placeNumber {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-gray-300);
+}
+
+.achievement h4 {
+  color: var(--color-secondary);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-1);
+}
+
+.athlete {
+  color: var(--color-white);
+  font-weight: var(--font-weight-medium);
+}
+
+.competition {
+  color: var(--color-gray-300);
+  font-size: var(--font-size-sm);
+}
+
+/* Vedení klubu */
+.boardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spacing-5);
+  margin-top: var(--spacing-6);
+}
+
+.boardMember {
+  text-align: center;
+}
+
+.boardPhoto {
+  margin-bottom: var(--spacing-4);
+}
+
+.boardPhotoPlaceholder {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto;
+  background: linear-gradient(
+    90deg,
+    var(--color-secondary-light),
+    var(--color-secondary-dark)
+  );
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-white);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  box-shadow: var(--glass-shadow);
+}
+
+.boardPhotoImage {
+  width: 120px;
+  height: 120px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+  box-shadow: var(--shadow-lg);
+}
+
+.boardMember h3 {
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--spacing-2);
+  color: var(--color-white);
+}
+
+.position {
+  color: var(--color-primary-light);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--spacing-3);
+}
+
+.email {
+  font-size: var(--font-size-sm);
+}
+
+.email a {
+  color: var(--color-gray-300);
+  text-decoration: none;
+}
+
+.email a:hover {
+  color: var(--color-secondary);
+  text-decoration: underline;
+}
+
+/* Trenéři */
+.coachesIntro {
+  max-width: 900px;
+  margin: 0 auto var(--spacing-8);
+  text-align: center;
+  color: var(--color-gray-100);
+  backdrop-filter: blur(6px);
+}
+
+.coachesIntro p {
+  font-size: var(--font-size-base);
+  color: var(--color-gray-200);
+  line-height: 1.65;
+}
+
+.divisionSection {
+  margin-bottom: var(--spacing-10);
+}
+
+.divisionHeader {
+  margin-bottom: var(--spacing-5);
+  padding-left: var(--spacing-6);
+  border-left: 6px solid var(--color-secondary);
+  color: var(--color-gray-100);
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.divisionHeader h3 {
+  font-size: var(--font-size-2xl);
+  margin-bottom: var(--spacing-2);
+  color: var(--color-white);
+}
+
+.divisionHeader p {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-500);
+}
+
+.coachesGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: start;
+  gap: var(--spacing-4);
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.coachesGrid > * {
+  flex: 0 1 350px;
+  min-width: 280px;
+}
+
+.coachCard {
+  text-align: center;
+  color: var(--color-gray-100);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.coachPhoto {
+  margin-bottom: var(--spacing-4);
+}
+
+.coachImage {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  box-shadow: var(--glass-shadow);
+}
+
+.coachCard h4 {
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--spacing-2);
+  color: var(--color-white);
+}
+
+.role {
+  color: var(--color-primary-light);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-base);
+  margin-bottom: var(--spacing-4);
+}
+
+.bio {
+  text-align: left;
+  padding: var(--spacing-4);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--spacing-3);
+  backdrop-filter: blur(12px);
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.bio p {
+  color: var(--color-gray-200);
+  line-height: 1.6;
+}
+
+.coachAchievements {
+  text-align: left;
+  margin-bottom: var(--spacing-3);
+}
+
+.coachAchievements h5 {
+  font-size: var(--font-size-base);
+  color: var(--color-gray-100);
+  margin-bottom: var(--spacing-2);
+}
+
+.coachAchievements ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.coachAchievements li {
+  padding: var(--spacing-1) 0;
+  padding-left: var(--spacing-6);
+  position: relative;
+  color: var(--color-gray-200);
+  font-size: var(--font-size-sm);
+}
+
+.coachAchievements li::before {
+  content: "🛶";
+  position: absolute;
+  left: 0;
+}
+.contact {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-4);
+  padding-top: var(--spacing-3);
+  border-top: 1px solid var(--glass-border);
+  margin-top: auto;
+}
+
+.email,
+.phone {
+  color: var(--color-primary-light);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  transition: color var(--transition-fast);
+}
+
+.email:hover,
+.phone:hover {
+  color: var(--color-white);
+  text-decoration: underline;
+}
+
+/* Hodnoty klubu */
+.valuesSection {
+  position: relative;
+  color: var(--color-white);
+  padding: var(--spacing-14) 0;
+  box-shadow: var(--glass-shadow);
+}
+
+.valuesSection h2 {
+  color: var(--color-white);
+  margin-bottom: var(--spacing-8);
+}
+
+.values {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-6);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.value {
+  text-align: center;
+  padding: var(--spacing-5);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(14px);
+}
+
+.valueIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90px; /* Fixní výška pro zarovnání nadpisů */
+  font-size: var(--font-size-6xl);
+  margin-bottom: var(--spacing-3);
+  color: var(--color-secondary);
+}
+
+.valueIcon img {
+  filter: brightness(0) invert(1);
+}
+
+@media (max-width: 768px) {
+  .milestones {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .coachesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .boardGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .values {
+    grid-template-columns: 1fr;
+  }
+
+  .valuesSection {
+    padding: var(--spacing-12) 0;
+  }
+}
