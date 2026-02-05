@@ -6,8 +6,8 @@ import Card from "@/components/Card/Card";
 import Button from "@/components/Button/Button";
 import Image from "next/image";
 import styles from "./page.module.css";
-import { Article } from "@/types";
 import { getAllArticles } from "@/lib/queries";
+import type { Article } from "@/lib/queries";
 
 async function getArticles(): Promise<Article[]> {
   try {

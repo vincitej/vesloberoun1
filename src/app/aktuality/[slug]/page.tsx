@@ -3,13 +3,13 @@ import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import Button from "@/components/Button/Button";
 import styles from "./page.module.css";
-import { Article } from "@/types";
 import { getAllArticles } from "@/lib/queries";
+import type { Article } from "@/lib/queries";
 
 interface ArticlePageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 async function getArticles(): Promise<Article[]> {
@@ -29,8 +29,9 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: ArticlePageProps) {
+  const { slug } = await params;
   const articles = await getArticles();
-  const article = articles.find((a) => a.slug === params.slug);
+  const article = articles.find((a) => a.slug === slug);
 
   if (!article) {
     return {
@@ -45,8 +46,9 @@ export async function generateMetadata({ params }: ArticlePageProps) {
 }
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
+  const { slug } = await params;
   const articles = await getArticles();
-  const article = articles.find((a) => a.slug === params.slug);
+  const article = articles.find((a) => a.slug === slug);
 
   if (!article) {
     notFound();

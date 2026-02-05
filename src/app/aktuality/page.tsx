@@ -5,8 +5,8 @@ import Hero from "@/components/Hero/Hero";
 import ArticlePreview from "@/components/ArticlePreview/ArticlePreview";
 import Skeleton from "@/components/Skeleton/Skeleton";
 import styles from "./page.module.css";
-import { Article } from "@/types";
 import { getAllArticles } from "@/lib/queries";
+import type { Article } from "@/lib/queries";
 
 export const metadata = {
   title: "Aktuality | VKK TJ Lokomotiva Beroun",

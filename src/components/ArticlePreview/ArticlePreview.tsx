@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Card from "../Card/Card";
 import styles from "./ArticlePreview.module.css";
-import { Article } from "@/types";
+import type { Article } from "@/lib/queries";
 
 interface ArticlePreviewProps {
   article: Article;
