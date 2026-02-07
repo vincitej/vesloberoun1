@@ -79,7 +79,7 @@ function getDatabase(): Database.Database {
       if (!hasYearColumn) {
         console.log("[DB] Adding year column to gallery table...");
         dbInstance.exec(
-          `ALTER TABLE gallery ADD COLUMN year INTEGER DEFAULT 2024`
+          `ALTER TABLE gallery ADD COLUMN year INTEGER DEFAULT 2024`,
         );
         console.log("[DB] Year column added successfully");
       }
@@ -97,15 +97,15 @@ function getDatabase(): Database.Database {
 
       if (userCount.count === 0) {
         console.log("[DB] Creating default admin user...");
-        const bcrypt = require("bcryptjs");
+        const bcrypt = require("bcrypt");
         const hash = bcrypt.hashSync("vkk2024admin", 10);
         dbInstance
           .prepare(
-            "INSERT INTO users (username, password_hash, email) VALUES (?, ?, ?)"
+            "INSERT INTO users (username, password_hash, email) VALUES (?, ?, ?)",
           )
           .run("admin", hash, "admin@vesloberoun.cz");
         console.log(
-          "[DB] Default admin user created (username: admin, password: vkk2024admin)"
+          "[DB] Default admin user created (username: admin, password: vkk2024admin)",
         );
       }
     } catch (userError) {

@@ -53,3 +53,14 @@ export interface Achievement {
   competition: string;
   place: number;
 }
+
+// Typy pro fotogalerii (lightbox)
+export interface Photo {
+  id: string | number;
+  title: string;
+  url: string;
+  thumbnail: string;
+  description?: string;
+  category: string;
+  date: string;
+}

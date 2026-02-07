@@ -1,4 +1,4 @@
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import db from "./db";
 
 console.log("[QUERIES] Module loaded, db connection:", !!db);

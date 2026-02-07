@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import type { PageProps } from "next";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import Button from "@/components/Button/Button";
@@ -7,9 +6,11 @@ import styles from "./page.module.css";
 import { getAllArticles } from "@/lib/queries";
 import type { Article } from "@/lib/queries";
 
-type ArticlePageProps = PageProps<{
-  slug: string;
-}>;
+type ArticlePageProps = {
+  params: Promise<{
+    slug: string;
+  }>;
+};
 
 async function getArticles(): Promise<Article[]> {
   try {
