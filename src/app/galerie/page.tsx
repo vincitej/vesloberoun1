@@ -10,6 +10,8 @@ export const metadata = {
   description: "Fotografie z našich aktivit a závodů",
 };
 
+export const dynamic = "force-dynamic";
+
 async function getGalleryImages(): Promise<GalleryImage[]> {
   try {
     return await getAllGalleryImages();
