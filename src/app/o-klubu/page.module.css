@@ -263,23 +263,6 @@
   min-width: 280px;
 }
 
-@media (max-width: 1024px) {
-  .coachesGrid {
-    justify-content: space-between;
-  }
-
-  .coachesGrid > * {
-    flex: 1 1 calc(50% - var(--spacing-4));
-    min-width: 0;
-  }
-}
-
-@media (max-width: 425px) {
-  .coachesGrid > * {
-    flex: 1 1 100%;
-  }
-}
-
 .coachCard {
   text-align: center;
   color: var(--color-gray-100);
