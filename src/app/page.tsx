@@ -11,7 +11,7 @@ import type { Article } from "@/lib/queries";
 
 async function getArticles(): Promise<Article[]> {
   try {
-    return getAllArticles();
+    return await getAllArticles();
   } catch (err) {
     console.error("Failed to fetch articles", err);
     return [];

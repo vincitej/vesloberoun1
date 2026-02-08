@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
+import { put } from "@vercel/blob";
 
 export async function POST(request: NextRequest) {
   const session = await auth();
@@ -20,28 +19,23 @@ export async function POST(request: NextRequest) {
 
     // Generuj unikátní název
     const timestamp = Date.now();
-    const extension = path.extname(file.name);
-    const baseName = path
-      .basename(file.name, extension)
+    const extension = file.name.includes(".")
+      ? `.${file.name.split(".").pop()}`
+      : "";
+    const baseName = file.name
+      .replace(extension, "")
       .toLowerCase()
-      .replace(/[^a-z0-9]/g, "-");
-    const fileName = `${baseName}-${timestamp}${extension}`;
+      .replace(/[^a-z0-9]/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
+    const fileName = `${baseName || "upload"}-${timestamp}${extension}`;
 
-    // Vytvoř složku pokud neexistuje
-    const uploadDir = path.join(process.cwd(), "public", "images", folder);
-    await mkdir(uploadDir, { recursive: true });
+    const blob = await put(`uploads/${folder}/${fileName}`, file, {
+      access: "public",
+      contentType: file.type || "application/octet-stream",
+    });
 
-    // Ulož do public/images/{folder}
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const filePath = path.join(uploadDir, fileName);
-
-    await writeFile(filePath, buffer);
-
-    // Vrať relativní cestu
-    const relativePath = `/images/${folder}/${fileName}`;
-
-    return NextResponse.json({ url: relativePath });
+    return NextResponse.json({ url: blob.url });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

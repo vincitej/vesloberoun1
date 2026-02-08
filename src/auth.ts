@@ -18,7 +18,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return null;
         }
 
-        const user = verifyUser(
+        const user = await verifyUser(
           credentials.username as string,
           credentials.password as string,
         );

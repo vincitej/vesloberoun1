@@ -12,7 +12,7 @@ export const metadata = {
 
 async function getGalleryImages(): Promise<GalleryImage[]> {
   try {
-    return getAllGalleryImages();
+    return await getAllGalleryImages();
   } catch (error) {
     console.error("Chyba při načítání galerie:", error);
     return [];

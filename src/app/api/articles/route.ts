@@ -14,7 +14,7 @@ export const revalidate = 60;
 // GET - seznam všech článků
 export async function GET() {
   try {
-    const articles = getAllArticles();
+    const articles = await getAllArticles();
     return NextResponse.json(articles);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -56,11 +56,11 @@ export async function POST(request: NextRequest) {
       });
       return NextResponse.json(
         { error: "Missing required fields" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    const result = createArticle({
+    const id = await createArticle({
       title,
       slug,
       excerpt,
@@ -71,13 +71,13 @@ export async function POST(request: NextRequest) {
       category,
     });
 
-    console.log("[API] Article created with ID:", result.lastInsertRowid);
-    return NextResponse.json({ id: result.lastInsertRowid, success: true });
+    console.log("[API] Article created with ID:", id);
+    return NextResponse.json({ id, success: true });
   } catch (error: any) {
     if (error.message.includes("UNIQUE")) {
       return NextResponse.json(
         { error: "Článek s tímto slug již existuje" },
-        { status: 400 }
+        { status: 400 },
       );
     }
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -98,11 +98,11 @@ export async function PUT(request: NextRequest) {
     if (!id) {
       return NextResponse.json(
         { error: "Missing article ID" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    updateArticle(id, updates);
+    await updateArticle(id, updates);
     return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -123,11 +123,11 @@ export async function DELETE(request: NextRequest) {
     if (!id) {
       return NextResponse.json(
         { error: "Missing article ID" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    deleteArticle(parseInt(id));
+    await deleteArticle(parseInt(id));
     return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

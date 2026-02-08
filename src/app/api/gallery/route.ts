@@ -13,7 +13,7 @@ export const revalidate = 60;
 // GET - seznam všech obrázků (veřejné)
 export async function GET() {
   try {
-    const images = getAllGalleryImages();
+    const images = await getAllGalleryImages();
     return NextResponse.json(images);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       console.log("[GALLERY API] Missing fields");
       return NextResponse.json(
         { error: "Missing required fields: title, url, thumbnail, year" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -46,16 +46,16 @@ export async function POST(request: NextRequest) {
       console.log("[GALLERY API] Invalid year:", year);
       return NextResponse.json(
         { error: "Year must be a valid number" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    const maxOrder = getAllGalleryImages().reduce(
+    const maxOrder = (await getAllGalleryImages()).reduce(
       (max, img) => Math.max(max, img.order),
-      0
+      0,
     );
 
-    const result = createGalleryImage({
+    const id = await createGalleryImage({
       title,
       url,
       thumbnail,
@@ -63,8 +63,8 @@ export async function POST(request: NextRequest) {
       order: maxOrder + 1,
     });
 
-    console.log("[GALLERY API] Image created with ID:", result.lastInsertRowid);
-    return NextResponse.json({ id: result.lastInsertRowid, success: true });
+    console.log("[GALLERY API] Image created with ID:", id);
+    return NextResponse.json({ id, success: true });
   } catch (error: any) {
     console.error("[GALLERY API] Error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -90,11 +90,11 @@ export async function PUT(request: NextRequest) {
     if (year && isNaN(yearInt!)) {
       return NextResponse.json(
         { error: "Year must be a valid number" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    updateGalleryImage(id, {
+    await updateGalleryImage(id, {
       title,
       url,
       thumbnail,
@@ -122,7 +122,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "Missing id" }, { status: 400 });
     }
 
-    deleteGalleryImage(parseInt(id));
+    await deleteGalleryImage(parseInt(id));
     return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

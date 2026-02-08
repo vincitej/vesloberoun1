@@ -1,4 +1,4 @@
-import db from "./db";
+import { ensureSchema, sql } from "./db";
 
 export interface GalleryImage {
   id: number;
@@ -10,65 +10,61 @@ export interface GalleryImage {
   created_at: string;
 }
 
-export function getAllGalleryImages(): GalleryImage[] {
-  const stmt = db.prepare("SELECT * FROM gallery ORDER BY `order` ASC");
-  return stmt.all() as GalleryImage[];
+export async function getAllGalleryImages(): Promise<GalleryImage[]> {
+  await ensureSchema();
+  const { rows } = await sql`SELECT * FROM gallery ORDER BY "order" ASC`;
+  return rows as GalleryImage[];
 }
 
-export function createGalleryImage(
-  image: Omit<GalleryImage, "id" | "created_at">
+export async function createGalleryImage(
+  image: Omit<GalleryImage, "id" | "created_at">,
 ) {
-  const stmt = db.prepare(
-    `INSERT INTO gallery (title, url, thumbnail, year, \`order\`) 
-     VALUES (?, ?, ?, ?, ?)`
-  );
-  return stmt.run(
-    image.title,
-    image.url,
-    image.thumbnail,
-    image.year,
-    image.order
-  );
+  await ensureSchema();
+  const { rows } = await sql`
+    INSERT INTO gallery (title, url, thumbnail, year, "order")
+    VALUES (${image.title}, ${image.url}, ${image.thumbnail}, ${image.year}, ${image.order})
+    RETURNING id
+  `;
+  return rows[0]?.id as number | undefined;
 }
 
-export function updateGalleryImage(
+export async function updateGalleryImage(
   id: number,
-  image: Partial<Omit<GalleryImage, "id" | "created_at">>
+  image: Partial<Omit<GalleryImage, "id" | "created_at">>,
 ) {
+  await ensureSchema();
   const updates: string[] = [];
   const values: any[] = [];
 
   if (image.title !== undefined) {
-    updates.push("title = ?");
+    updates.push(`title = $${values.length + 1}`);
     values.push(image.title);
   }
   if (image.url !== undefined) {
-    updates.push("url = ?");
+    updates.push(`url = $${values.length + 1}`);
     values.push(image.url);
   }
   if (image.thumbnail !== undefined) {
-    updates.push("thumbnail = ?");
+    updates.push(`thumbnail = $${values.length + 1}`);
     values.push(image.thumbnail);
   }
   if (image.year !== undefined) {
-    updates.push("year = ?");
+    updates.push(`year = $${values.length + 1}`);
     values.push(image.year);
   }
   if (image.order !== undefined) {
-    updates.push("`order` = ?");
+    updates.push(`"order" = $${values.length + 1}`);
     values.push(image.order);
   }
 
   if (updates.length === 0) return null;
 
-  values.push(id);
-  const stmt = db.prepare(
-    `UPDATE gallery SET ${updates.join(", ")} WHERE id = ?`
-  );
-  return stmt.run(...values);
+  const idParam = values.length + 1;
+  const query = `UPDATE gallery SET ${updates.join(", ")} WHERE id = $${idParam}`;
+  return sql.query(query, [...values, id]);
 }
 
-export function deleteGalleryImage(id: number) {
-  const stmt = db.prepare("DELETE FROM gallery WHERE id = ?");
-  return stmt.run(id);
+export async function deleteGalleryImage(id: number) {
+  await ensureSchema();
+  return sql`DELETE FROM gallery WHERE id = ${id}`;
 }

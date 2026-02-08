@@ -12,6 +12,7 @@ import {
   summerActivities,
   winterActivities,
 } from "@/data/training";
+import { getMembershipSections } from "@/lib/membershipQueries";
 import styles from "./page.module.css";
 
 export const metadata = {
@@ -20,7 +21,49 @@ export const metadata = {
     "Informace o členství ve Veslařském klubu Beroun, tréninkové plány a příspěvky",
 };
 
-export default function MembershipPage() {
+async function getMembershipData() {
+  try {
+    return await getMembershipSections();
+  } catch (error) {
+    console.error("Failed to load membership data", error);
+    return [];
+  }
+}
+
+export default async function MembershipPage() {
+  const membershipSections = await getMembershipData();
+
+  const sectionMeta: Record<
+    string,
+    { icon: string; alt: string; size: number; extra?: "clothing" }
+  > = {
+    "rozpis-plavani": {
+      icon: "/images/bazen.webp",
+      alt: "Rozpis plavání",
+      size: 32,
+    },
+    "terminova-listina": {
+      icon: "/images/kalendar.webp",
+      alt: "Termínová listina",
+      size: 40,
+    },
+    soustredeni: {
+      icon: "/images/rozvoj.webp",
+      alt: "Soustředění",
+      size: 40,
+    },
+    "dulezita-pravidla": {
+      icon: "/images/pravidla.webp",
+      alt: "Důležitá pravidla",
+      size: 40,
+    },
+    "sportovni-vybava": {
+      icon: "/images/material.webp",
+      alt: "Sportovní výbava",
+      size: 40,
+      extra: "clothing",
+    },
+  };
   return (
     <>
       <Header />
@@ -192,249 +235,86 @@ export default function MembershipPage() {
             </h2>
 
             <div className={styles.memberSection}>
-              {/* Rozpis plavání */}
-              <Card className={styles.memberCard} hover>
-                <div className={styles.memberCardHeader}>
-                  <div className={styles.memberIcon}>
-                    <Image
-                      src="/images/bazen.webp"
-                      alt="Rozpis plavání"
-                      width={32}
-                      height={32}
-                    />
-                  </div>
-                  <div>
-                    <h3>Rozpis plavání</h3>
-                    <p>Plavecké skupiny a tréninky.</p>
-                  </div>
-                </div>
-                <div className={styles.memberActions}>
-                  <Button
-                    href="/documents/rozpis-plavani.xlsx"
-                    variant="outline"
-                    download
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    size="sm"
-                  >
-                    Stáhnout (.xlsx)
-                  </Button>
-                  <Button
-                    href="/documents/rozpis-plavani.pdf"
-                    variant="outline"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    size="sm"
-                  >
-                    Zobrazit (PDF)
-                  </Button>
-                </div>
-              </Card>
+              {membershipSections.map((section) => {
+                const meta = sectionMeta[section.key];
+                if (!meta) return null;
 
-              {/* Termínová listina */}
-              <Card className={styles.memberCard} hover>
-                <div className={styles.memberCardHeader}>
-                  <div className={styles.memberIcon}>
-                    <Image
-                      src="/images/kalendar.webp"
-                      alt="Termínová listina"
-                      width={40}
-                      height={40}
-                    />
-                  </div>
-                  <div>
-                    <h3>Termínová listina</h3>
-                    <p>Plán závodů a akcí klubu.</p>
-                  </div>
-                </div>
-                <div className={styles.memberActions}>
-                  <Button
-                    href="/documents/terminova-listina.xlsx"
-                    variant="outline"
-                    download
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    size="sm"
-                  >
-                    Stáhnout (.xlsx)
-                  </Button>
-                  <Button
-                    href="/documents/terminova-listina.pdf"
-                    variant="outline"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    size="sm"
-                  >
-                    Zobrazit (PDF)
-                  </Button>
-                </div>
-              </Card>
-
-              {/* Soustředění */}
-              <Card className={styles.memberCard} hover>
-                <div className={styles.memberCardHeader}>
-                  <div className={styles.memberIcon}>
-                    <Image
-                      src="/images/rozvoj.webp"
-                      alt="Soustředění"
-                      width={40}
-                      height={40}
-                    />
-                  </div>
-                  <div>
-                    <h3>Soustředění</h3>
-                    <p>Informace o soustředěních klubu.</p>
-                  </div>
-                </div>
-                <div className={styles.memberActions}>
-                  <Button
-                    href="/documents/lorem-ipsum.doc"
-                    variant="outline"
-                    download
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    size="sm"
-                  >
-                    Lorem Ipsum (.doc)
-                  </Button>
-                  <Button
-                    href="/documents/lorem-ipsum.doc"
-                    variant="outline"
-                    download
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    size="sm"
-                  >
-                    Lorem Ipsum (.doc)
-                  </Button>
-                  <Button
-                    href="/documents/lorem-ipsum.doc"
-                    variant="outline"
-                    download
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    size="sm"
-                  >
-                    Lorem Ipsum (.doc)
-                  </Button>
-                </div>
-              </Card>
-
-              {/* Důležitá pravidla */}
-              <Card className={styles.memberCard} hover>
-                <div className={styles.memberCardHeader}>
-                  <div className={styles.memberIcon}>
-                    <Image
-                      src="/images/pravidla.webp"
-                      alt="Důležitá pravidla"
-                      width={40}
-                      height={40}
-                    />
-                  </div>
-                  <div>
-                    <h3>Důležitá pravidla</h3>
-                    <p>Desatera pro trénink a podmínky přijetí Race Team.</p>
-                  </div>
-                </div>
-                <div className={styles.memberActions}>
-                  <Button
-                    href="/documents/desatera-pro-trenink.pdf"
-                    variant="outline"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    size="sm"
-                  >
-                    Desatera pro trénink
-                  </Button>
-                  <Button
-                    href="/documents/podminky-prijeti-rt.pdf"
-                    variant="outline"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    size="sm"
-                  >
-                    Podmínky Race Team
-                  </Button>
-                </div>
-              </Card>
-
-              {/* Klubové oblečení */}
-              <Card className={styles.memberCard} hover>
-                <div className={styles.memberCardHeader}>
-                  <div className={styles.memberIcon}>
-                    <Image
-                      src="/images/material.webp"
-                      alt="Sportovní výbava"
-                      width={40}
-                      height={40}
-                    />
-                  </div>
-                  <div>
-                    <h3>Sportovní výbava</h3>
-                    <p>Klubové závodní oblečení</p>
-                  </div>
-                </div>
-
-                <div className={styles.imageGrid}>
-                  <div className={styles.imageItem}>
-                    <div className={styles.imageWrapper}>
-                      <Image
-                        src="/images/obleceni/zavodni-dres.webp"
-                        alt="Závodní dres"
-                        width={200}
-                        height={200}
-                        className={styles.clothingImage}
-                      />
+                return (
+                  <Card key={section.id} className={styles.memberCard} hover>
+                    <div className={styles.memberCardHeader}>
+                      <div className={styles.memberIcon}>
+                        <Image
+                          src={meta.icon}
+                          alt={meta.alt}
+                          width={meta.size}
+                          height={meta.size}
+                        />
+                      </div>
+                      <div>
+                        <h3>{section.title}</h3>
+                        <p>{section.description}</p>
+                      </div>
                     </div>
-                    <p>Závodní dres</p>
-                  </div>
-                  <div className={styles.imageItem}>
-                    <div className={styles.imageWrapper}>
-                      <Image
-                        src="/images/obleceni/zavodni-tilko.webp"
-                        alt="Závodní tílko"
-                        width={200}
-                        height={200}
-                        className={styles.clothingImage}
-                      />
-                    </div>
-                    <p>Závodní tílko</p>
-                  </div>
-                  <div className={styles.imageItem}>
-                    <div className={styles.imageWrapper}>
-                      <Image
-                        src="/images/obleceni/zavodni-triko.webp"
-                        alt="Závodní triko"
-                        width={200}
-                        height={200}
-                        className={styles.clothingImage}
-                      />
-                    </div>
-                    <p>Závodní triko</p>
-                  </div>
-                </div>
 
-                <div className={styles.memberActions}>
-                  <Button
-                    href="/documents/cenik.pdf"
-                    variant="outline"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    size="sm"
-                  >
-                    Ceník
-                  </Button>
-                  <Button
-                    href="https://www.rajce.idnes.cz/vesloberoun/album/nova-kolekce-sportovniho-obleceni-2019"
-                    variant="outline"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    size="sm"
-                  >
-                    Kompletní kolekce
-                  </Button>
-                </div>
-              </Card>
+                    {meta.extra === "clothing" && (
+                      <div className={styles.imageGrid}>
+                        <div className={styles.imageItem}>
+                          <div className={styles.imageWrapper}>
+                            <Image
+                              src="/images/obleceni/zavodni-dres.webp"
+                              alt="Závodní dres"
+                              width={200}
+                              height={200}
+                              className={styles.clothingImage}
+                            />
+                          </div>
+                          <p>Závodní dres</p>
+                        </div>
+                        <div className={styles.imageItem}>
+                          <div className={styles.imageWrapper}>
+                            <Image
+                              src="/images/obleceni/zavodni-tilko.webp"
+                              alt="Závodní tílko"
+                              width={200}
+                              height={200}
+                              className={styles.clothingImage}
+                            />
+                          </div>
+                          <p>Závodní tílko</p>
+                        </div>
+                        <div className={styles.imageItem}>
+                          <div className={styles.imageWrapper}>
+                            <Image
+                              src="/images/obleceni/zavodni-triko.webp"
+                              alt="Závodní triko"
+                              width={200}
+                              height={200}
+                              className={styles.clothingImage}
+                            />
+                          </div>
+                          <p>Závodní triko</p>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className={styles.memberActions}>
+                      {section.links.map((link) => (
+                        <Button
+                          key={link.id}
+                          href={link.url}
+                          variant="outline"
+                          download={link.is_download}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          size="sm"
+                        >
+                          {link.label}
+                        </Button>
+                      ))}
+                    </div>
+                  </Card>
+                );
+              })}
 
               {/* Členská sekce - EOS */}
               <Card className={styles.memberCard} hover>

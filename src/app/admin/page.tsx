@@ -33,6 +33,24 @@ interface GalleryImage {
   order: number;
 }
 
+interface MembershipLink {
+  id: number;
+  section_key: string;
+  label: string;
+  url: string;
+  is_download: boolean;
+  order: number;
+}
+
+interface MembershipSection {
+  id: number;
+  key: string;
+  title: string;
+  description: string;
+  order: number;
+  links: MembershipLink[];
+}
+
 function AdminContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -76,6 +94,21 @@ function AdminContent() {
     year: new Date().getFullYear().toString(),
   });
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+
+  // Membership State
+  const [membershipSections, setMembershipSections] = useState<
+    MembershipSection[]
+  >([]);
+  const [sectionEdits, setSectionEdits] = useState<
+    Record<number, { title: string; description: string }>
+  >({});
+  const [linkEdits, setLinkEdits] = useState<
+    Record<number, { label: string; url: string; isDownload: boolean }>
+  >({});
+  const [newLinkDrafts, setNewLinkDrafts] = useState<
+    Record<string, { label: string; url: string; isDownload: boolean }>
+  >({});
+  const [membershipUploading, setMembershipUploading] = useState(false);
 
   // ReactQuill modules configuration
   const quillModules = {
@@ -230,9 +263,51 @@ function AdminContent() {
       if (view === "articles") {
         const res = await fetch("/api/articles");
         if (res.ok) setArticles(await res.json());
-      } else {
+      } else if (view === "gallery") {
         const res = await fetch("/api/gallery");
         if (res.ok) setGalleryImages(await res.json());
+      } else if (view === "membership") {
+        const res = await fetch("/api/membership");
+        if (res.ok) {
+          const data: MembershipSection[] = await res.json();
+          setMembershipSections(data);
+
+          const nextSectionEdits: Record<
+            number,
+            { title: string; description: string }
+          > = {};
+          const nextLinkEdits: Record<
+            number,
+            { label: string; url: string; isDownload: boolean }
+          > = {};
+          const nextDrafts: Record<
+            string,
+            { label: string; url: string; isDownload: boolean }
+          > = {};
+
+          data.forEach((section) => {
+            nextSectionEdits[section.id] = {
+              title: section.title,
+              description: section.description,
+            };
+            nextDrafts[section.key] = {
+              label: "",
+              url: "",
+              isDownload: false,
+            };
+            section.links.forEach((link) => {
+              nextLinkEdits[link.id] = {
+                label: link.label,
+                url: link.url,
+                isDownload: link.is_download,
+              };
+            });
+          });
+
+          setSectionEdits(nextSectionEdits);
+          setLinkEdits(nextLinkEdits);
+          setNewLinkDrafts(nextDrafts);
+        }
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -384,6 +459,101 @@ function AdminContent() {
       category: "akce",
     });
     setUploadingArticle(false);
+  };
+
+  // --- MEMBERSHIP LOGIC ---
+  const saveMembershipSection = async (sectionId: number) => {
+    const edits = sectionEdits[sectionId];
+    if (!edits) return;
+
+    await fetch("/api/membership", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "section",
+        id: sectionId,
+        title: edits.title,
+        description: edits.description,
+      }),
+    });
+    fetchData();
+  };
+
+  const saveMembershipLink = async (linkId: number) => {
+    const edits = linkEdits[linkId];
+    if (!edits) return;
+
+    await fetch("/api/membership", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "link",
+        id: linkId,
+        label: edits.label,
+        url: edits.url,
+        isDownload: edits.isDownload,
+      }),
+    });
+    fetchData();
+  };
+
+  const deleteMembershipLink = async (linkId: number) => {
+    if (!confirm("Opravdu smazat odkaz?")) return;
+    await fetch(`/api/membership?id=${linkId}`, { method: "DELETE" });
+    fetchData();
+  };
+
+  const addMembershipLink = async (section: MembershipSection) => {
+    const draft = newLinkDrafts[section.key];
+    if (!draft?.label || !draft?.url) {
+      alert("Vyplňte název a URL");
+      return;
+    }
+
+    await fetch("/api/membership", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sectionKey: section.key,
+        label: draft.label,
+        url: draft.url,
+        isDownload: draft.isDownload,
+        order: (section.links?.length ?? 0) + 1,
+      }),
+    });
+
+    setNewLinkDrafts((prev) => ({
+      ...prev,
+      [section.key]: { label: "", url: "", isDownload: false },
+    }));
+    fetchData();
+  };
+
+  const uploadMembershipFile = async (sectionKey: string, file?: File) => {
+    if (!file) return;
+    setMembershipUploading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("folder", "documents");
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.url) {
+        setNewLinkDrafts((prev) => ({
+          ...prev,
+          [sectionKey]: {
+            ...(prev[sectionKey] ?? { label: "", isDownload: false }),
+            url: data.url,
+          },
+        }));
+      }
+    } finally {
+      setMembershipUploading(false);
+    }
   };
 
   // --- DELETE LOGIC ---
@@ -1114,6 +1284,273 @@ function AdminContent() {
                 </div>
               ))}
             </div>
+          </>
+        )}
+
+        {/* MEMBERSHIP VIEW */}
+        {view === "membership" && (
+          <>
+            <div className={styles.pageHeader}>
+              <h1 className={styles.pageTitle}>Správa členství</h1>
+            </div>
+
+            {membershipSections.map((section) => {
+              const sectionEdit = sectionEdits[section.id];
+              const newLink = newLinkDrafts[section.key];
+
+              return (
+                <div key={section.id} className={styles.card}>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr",
+                      gap: "16px",
+                      marginBottom: "24px",
+                    }}
+                  >
+                    <div className={styles.inputGroup}>
+                      <label className={styles.label}>Název karty</label>
+                      <input
+                        className={styles.input}
+                        value={sectionEdit?.title ?? section.title}
+                        onChange={(e) =>
+                          setSectionEdits((prev) => ({
+                            ...prev,
+                            [section.id]: {
+                              title: e.target.value,
+                              description:
+                                prev[section.id]?.description ??
+                                section.description,
+                            },
+                          }))
+                        }
+                      />
+                    </div>
+                    <div className={styles.inputGroup}>
+                      <label className={styles.label}>Popis</label>
+                      <textarea
+                        className={styles.textarea}
+                        rows={2}
+                        value={sectionEdit?.description ?? section.description}
+                        onChange={(e) =>
+                          setSectionEdits((prev) => ({
+                            ...prev,
+                            [section.id]: {
+                              title: prev[section.id]?.title ?? section.title,
+                              description: e.target.value,
+                            },
+                          }))
+                        }
+                      />
+                    </div>
+                    <div
+                      style={{ display: "flex", justifyContent: "flex-end" }}
+                    >
+                      <button
+                        type="button"
+                        className={styles.primaryBtn}
+                        onClick={() => saveMembershipSection(section.id)}
+                      >
+                        Uložit kartu
+                      </button>
+                    </div>
+                  </div>
+
+                  <h3 style={{ marginBottom: "12px" }}>Downloady</h3>
+                  <div style={{ display: "grid", gap: "12px" }}>
+                    {section.links.map((link) => {
+                      const linkEdit = linkEdits[link.id];
+                      return (
+                        <div
+                          key={link.id}
+                          style={{
+                            display: "grid",
+                            gridTemplateColumns: "2fr 3fr 140px 160px",
+                            gap: "12px",
+                            alignItems: "center",
+                          }}
+                        >
+                          <input
+                            className={styles.input}
+                            value={linkEdit?.label ?? link.label}
+                            onChange={(e) =>
+                              setLinkEdits((prev) => ({
+                                ...prev,
+                                [link.id]: {
+                                  label: e.target.value,
+                                  url: prev[link.id]?.url ?? link.url,
+                                  isDownload:
+                                    prev[link.id]?.isDownload ??
+                                    link.is_download,
+                                },
+                              }))
+                            }
+                          />
+                          <input
+                            className={styles.input}
+                            value={linkEdit?.url ?? link.url}
+                            onChange={(e) =>
+                              setLinkEdits((prev) => ({
+                                ...prev,
+                                [link.id]: {
+                                  label: prev[link.id]?.label ?? link.label,
+                                  url: e.target.value,
+                                  isDownload:
+                                    prev[link.id]?.isDownload ??
+                                    link.is_download,
+                                },
+                              }))
+                            }
+                          />
+                          <label
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "8px",
+                              fontSize: "14px",
+                            }}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={linkEdit?.isDownload ?? link.is_download}
+                              onChange={(e) =>
+                                setLinkEdits((prev) => ({
+                                  ...prev,
+                                  [link.id]: {
+                                    label: prev[link.id]?.label ?? link.label,
+                                    url: prev[link.id]?.url ?? link.url,
+                                    isDownload: e.target.checked,
+                                  },
+                                }))
+                              }
+                            />
+                            Stahovat
+                          </label>
+                          <div style={{ display: "flex", gap: "8px" }}>
+                            <button
+                              type="button"
+                              className={styles.secondaryBtn}
+                              onClick={() => saveMembershipLink(link.id)}
+                            >
+                              Uložit
+                            </button>
+                            <button
+                              type="button"
+                              className={styles.dangerBtn}
+                              onClick={() => deleteMembershipLink(link.id)}
+                            >
+                              Smazat
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <div
+                    style={{
+                      marginTop: "20px",
+                      paddingTop: "16px",
+                      borderTop: "1px solid var(--color-gray-200)",
+                      display: "grid",
+                      gap: "12px",
+                    }}
+                  >
+                    <h4 style={{ marginBottom: "4px" }}>Novy download</h4>
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "2fr 3fr 160px",
+                        gap: "12px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <input
+                        className={styles.input}
+                        placeholder="Název tlačítka"
+                        value={newLink?.label ?? ""}
+                        onChange={(e) =>
+                          setNewLinkDrafts((prev) => ({
+                            ...prev,
+                            [section.key]: {
+                              label: e.target.value,
+                              url: prev[section.key]?.url ?? "",
+                              isDownload:
+                                prev[section.key]?.isDownload ?? false,
+                            },
+                          }))
+                        }
+                      />
+                      <input
+                        className={styles.input}
+                        placeholder="URL souboru"
+                        value={newLink?.url ?? ""}
+                        onChange={(e) =>
+                          setNewLinkDrafts((prev) => ({
+                            ...prev,
+                            [section.key]: {
+                              label: prev[section.key]?.label ?? "",
+                              url: e.target.value,
+                              isDownload:
+                                prev[section.key]?.isDownload ?? false,
+                            },
+                          }))
+                        }
+                      />
+                      <label
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
+                          fontSize: "14px",
+                        }}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={newLink?.isDownload ?? false}
+                          onChange={(e) =>
+                            setNewLinkDrafts((prev) => ({
+                              ...prev,
+                              [section.key]: {
+                                label: prev[section.key]?.label ?? "",
+                                url: prev[section.key]?.url ?? "",
+                                isDownload: e.target.checked,
+                              },
+                            }))
+                          }
+                        />
+                        Stahovat
+                      </label>
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "12px",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <input
+                        type="file"
+                        className={styles.input}
+                        onChange={(e) =>
+                          uploadMembershipFile(section.key, e.target.files?.[0])
+                        }
+                      />
+                      <button
+                        type="button"
+                        className={styles.primaryBtn}
+                        onClick={() => addMembershipLink(section)}
+                        disabled={membershipUploading}
+                      >
+                        {membershipUploading ? "Nahrávám..." : "Přidat"}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </>
         )}
       </main>

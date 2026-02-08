@@ -9,8 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@vercel/blob": "^0.23.4",
+    "@vercel/postgres": "^0.10.0",
     "bcrypt": "^5.1.1",
-    "better-sqlite3": "^11.8.1",
     "next": "^15.1.5",
     "next-auth": "^5.0.0-beta.25",
     "react": "^18.3.1",
@@ -19,7 +20,6 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
-    "@types/better-sqlite3": "^7.6.12",
     "@types/node": "^22.10.5",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",

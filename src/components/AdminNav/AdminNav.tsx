@@ -26,6 +26,12 @@ export default function AdminNav() {
       icon: "🖼️",
       view: "gallery",
     },
+    {
+      label: "Členství",
+      href: "/admin?view=membership",
+      icon: "📎",
+      view: "membership",
+    },
   ];
 
   return (
