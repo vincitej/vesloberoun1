@@ -1,17 +1,22 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
-import * as ReactDOM from "react-dom";
+import { useEffect, useRef, useState, Suspense } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import dynamic from "next/dynamic";
-import "react-quill/dist/quill.snow.css";
+import { EditorContent, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import TextStyle from "@tiptap/extension-text-style";
+import Color from "@tiptap/extension-color";
+import Underline from "@tiptap/extension-underline";
+import Link from "@tiptap/extension-link";
+import TiptapImage from "@tiptap/extension-image";
+import Table from "@tiptap/extension-table";
+import TableRow from "@tiptap/extension-table-row";
+import TableHeader from "@tiptap/extension-table-header";
+import TableCell from "@tiptap/extension-table-cell";
 import styles from "@/app/admin/admin-shared.module.css";
 import AdminNav from "@/components/AdminNav/AdminNav";
 import Image from "next/image";
-
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
-const canUseQuill = typeof ReactDOM.findDOMNode === "function";
 
 // Interfaces
 interface Article {
@@ -51,6 +56,252 @@ interface MembershipSection {
   description: string;
   order: number;
   links: MembershipLink[];
+}
+
+type ArticleEditorProps = {
+  value: string;
+  onChange: (value: string) => void;
+};
+
+function ArticleEditor({ value, onChange }: ArticleEditorProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const editor = useEditor({
+    extensions: [
+      StarterKit.configure({
+        heading: { levels: [1, 2, 3] },
+      }),
+      TextStyle,
+      Color,
+      Underline,
+      Link.configure({
+        openOnClick: true,
+        autolink: true,
+        defaultProtocol: "https",
+      }),
+      TiptapImage,
+      Table.configure({ resizable: true }),
+      TableRow,
+      TableHeader,
+      TableCell,
+    ],
+    content: value || "<p></p>",
+    onUpdate: ({ editor: current }) => {
+      onChange(current.getHTML());
+    },
+    editorProps: {
+      attributes: {
+        class: styles.editorContent,
+      },
+    },
+  });
+
+  useEffect(() => {
+    if (!editor) return;
+    const current = editor.getHTML();
+    if (current !== value) {
+      editor.commands.setContent(value || "<p></p>", false);
+    }
+  }, [editor, value]);
+
+  const onPickImage = () => {
+    fileInputRef.current?.click();
+  };
+
+  const onImageSelected = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file || !editor) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("folder", "articles");
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data?.url) {
+        throw new Error(data?.error || "Upload failed");
+      }
+      editor.chain().focus().setImage({ src: data.url }).run();
+      event.target.value = "";
+    } catch (error) {
+      const message = error instanceof Error ? error.message : null;
+      alert(message || "Chyba při nahrávání obrázku");
+    }
+  };
+
+  const setLink = () => {
+    if (!editor) return;
+    const previousUrl = editor.getAttributes("link").href as string | null;
+    const url = window.prompt("URL", previousUrl || "");
+    if (url === null) return;
+    if (url.trim() === "") {
+      editor.chain().focus().unsetLink().run();
+      return;
+    }
+    editor.chain().focus().setLink({ href: url.trim() }).run();
+  };
+
+  if (!editor) return null;
+
+  return (
+    <div className={styles.editorWrapper}>
+      <div className={styles.editorToolbar}>
+        <button
+          type="button"
+          className={`${styles.editorButton} ${
+            editor.isActive("bold") ? styles.editorButtonActive : ""
+          }`}
+          onClick={() => editor.chain().focus().toggleBold().run()}
+        >
+          B
+        </button>
+        <button
+          type="button"
+          className={`${styles.editorButton} ${
+            editor.isActive("italic") ? styles.editorButtonActive : ""
+          }`}
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+        >
+          I
+        </button>
+        <button
+          type="button"
+          className={`${styles.editorButton} ${
+            editor.isActive("underline") ? styles.editorButtonActive : ""
+          }`}
+          onClick={() => editor.chain().focus().toggleUnderline().run()}
+        >
+          U
+        </button>
+        <button
+          type="button"
+          className={`${styles.editorButton} ${
+            editor.isActive("strike") ? styles.editorButtonActive : ""
+          }`}
+          onClick={() => editor.chain().focus().toggleStrike().run()}
+        >
+          S
+        </button>
+        <button
+          type="button"
+          className={styles.editorButton}
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 2 }).run()
+          }
+        >
+          H2
+        </button>
+        <button
+          type="button"
+          className={styles.editorButton}
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 3 }).run()
+          }
+        >
+          H3
+        </button>
+        <button
+          type="button"
+          className={styles.editorButton}
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+        >
+          • List
+        </button>
+        <button
+          type="button"
+          className={styles.editorButton}
+          onClick={() => editor.chain().focus().toggleOrderedList().run()}
+        >
+          1. List
+        </button>
+        <input
+          type="color"
+          className={styles.editorColorInput}
+          onChange={(event) =>
+            editor.chain().focus().setColor(event.target.value).run()
+          }
+        />
+        <button
+          type="button"
+          className={styles.editorButton}
+          onClick={() => editor.chain().focus().unsetColor().run()}
+        >
+          Barva
+        </button>
+        <button type="button" className={styles.editorButton} onClick={setLink}>
+          Odkaz
+        </button>
+        <button
+          type="button"
+          className={styles.editorButton}
+          onClick={onPickImage}
+        >
+          Obrázek
+        </button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={onImageSelected}
+          style={{ display: "none" }}
+        />
+        <button
+          type="button"
+          className={styles.editorButton}
+          onClick={() =>
+            editor
+              .chain()
+              .focus()
+              .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+              .run()
+          }
+        >
+          Tabulka
+        </button>
+        <button
+          type="button"
+          className={styles.editorButton}
+          onClick={() => editor.chain().focus().addColumnAfter().run()}
+        >
+          + Sloupec
+        </button>
+        <button
+          type="button"
+          className={styles.editorButton}
+          onClick={() => editor.chain().focus().addRowAfter().run()}
+        >
+          + Radek
+        </button>
+        <button
+          type="button"
+          className={styles.editorButton}
+          onClick={() => editor.chain().focus().deleteColumn().run()}
+        >
+          - Sloupec
+        </button>
+        <button
+          type="button"
+          className={styles.editorButton}
+          onClick={() => editor.chain().focus().deleteRow().run()}
+        >
+          - Radek
+        </button>
+        <button
+          type="button"
+          className={styles.editorButton}
+          onClick={() => editor.chain().focus().deleteTable().run()}
+        >
+          Smazat tabulku
+        </button>
+      </div>
+      <EditorContent editor={editor} />
+    </div>
+  );
 }
 
 function AdminContent() {
@@ -122,139 +373,6 @@ function AdminContent() {
     setter(message);
     window.setTimeout(() => setter(null), 3000);
   };
-
-  // ReactQuill modules configuration
-  const quillModules = {
-    toolbar: {
-      container: [
-        [{ header: [1, 2, 3, false] }],
-        ["bold", "italic", "underline", "strike"],
-        [
-          {
-            color: [
-              "#000000",
-              "#e60000",
-              "#ff9900",
-              "#ffff00",
-              "#008a00",
-              "#0066cc",
-              "#9933ff",
-              "#ffffff",
-              "#facccc",
-              "#ffebcc",
-              "#ffffcc",
-              "#cce8cc",
-              "#cce0f5",
-              "#ebd6ff",
-              "#bbbbbb",
-              "#f06666",
-              "#ffc266",
-              "#ffff66",
-              "#66b966",
-              "#66a3e0",
-              "#c285ff",
-              "#888888",
-              "#a10000",
-              "#b26b00",
-              "#b2b200",
-              "#006100",
-              "#0047b2",
-              "#6b24b2",
-              "#444444",
-              "#5c0000",
-              "#663d00",
-              "#666600",
-              "#003700",
-              "#002966",
-              "#3d1466",
-            ],
-          },
-          {
-            background: [
-              "#000000",
-              "#e60000",
-              "#ff9900",
-              "#ffff00",
-              "#008a00",
-              "#0066cc",
-              "#9933ff",
-              "#ffffff",
-              "#facccc",
-              "#ffebcc",
-              "#ffffcc",
-              "#cce8cc",
-              "#cce0f5",
-              "#ebd6ff",
-              "#bbbbbb",
-              "#f06666",
-              "#ffc266",
-              "#ffff66",
-              "#66b966",
-              "#66a3e0",
-              "#c285ff",
-              "#888888",
-              "#a10000",
-              "#b26b00",
-              "#b2b200",
-              "#006100",
-              "#0047b2",
-              "#6b24b2",
-              "#444444",
-              "#5c0000",
-              "#663d00",
-              "#666600",
-              "#003700",
-              "#002966",
-              "#3d1466",
-            ],
-          },
-        ],
-        [{ list: "ordered" }, { list: "bullet" }],
-        [{ align: [] }],
-        ["link", "image"],
-        ["clean"],
-      ],
-      handlers: {},
-    },
-  };
-
-  // Add hover titles for Quill toolbar buttons (Czech labels) with robust observer
-  useEffect(() => {
-    const setTitlesForToolbar = (tb: Element) => {
-      const setTitle = (selector: string, title: string) => {
-        tb.querySelectorAll(selector).forEach((el) =>
-          el.setAttribute("title", title),
-        );
-      };
-      setTitle("button.ql-bold", "Tučné");
-      setTitle("button.ql-italic", "Kurzíva");
-      setTitle("button.ql-underline", "Podtržení");
-      setTitle("button.ql-strike", "Přeškrtnuté");
-      setTitle("button.ql-link", "Odkaz");
-      setTitle("button.ql-image", "Obrázek");
-      setTitle("button.ql-clean", "Vyčistit formátování");
-      setTitle('button.ql-list[value="ordered"]', "Seznam (číslovaný)");
-      setTitle('button.ql-list[value="bullet"]', "Seznam (odrážky)");
-      setTitle(".ql-picker.ql-color .ql-picker-label", "Barva textu");
-      setTitle(".ql-picker.ql-background .ql-picker-label", "Barva pozadí");
-      setTitle(".ql-picker.ql-align .ql-picker-label", "Zarovnání");
-      setTitle(".ql-picker.ql-header .ql-picker-label", "Nadpis");
-    };
-
-    const applyToAllToolbars = () => {
-      document
-        .querySelectorAll(".ql-toolbar")
-        .forEach((tb) => setTitlesForToolbar(tb));
-    };
-
-    applyToAllToolbars();
-
-    const observer = new MutationObserver(() => {
-      applyToAllToolbars();
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-    return () => observer.disconnect();
-  }, [view, expandedArticleId, expandedGalleryId]);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -720,30 +838,12 @@ function AdminContent() {
 
                 <div className={styles.inputGroup}>
                   <label className={styles.label}>Obsah *</label>
-                  <div className={styles.quill}>
-                    {canUseQuill ? (
-                      <ReactQuill
-                        value={articleData.content}
-                        onChange={(val) =>
-                          setArticleData({ ...articleData, content: val })
-                        }
-                        theme="snow"
-                        modules={quillModules}
-                      />
-                    ) : (
-                      <textarea
-                        className={styles.textarea}
-                        value={articleData.content}
-                        onChange={(e) =>
-                          setArticleData({
-                            ...articleData,
-                            content: e.target.value,
-                          })
-                        }
-                        required
-                      />
-                    )}
-                  </div>
+                  <ArticleEditor
+                    value={articleData.content}
+                    onChange={(val) =>
+                      setArticleData({ ...articleData, content: val })
+                    }
+                  />
                 </div>
 
                 <div
@@ -982,33 +1082,15 @@ function AdminContent() {
                                   <label className={styles.label}>
                                     Obsah *
                                   </label>
-                                  <div className={styles.quill}>
-                                    {canUseQuill ? (
-                                      <ReactQuill
-                                        value={articleData.content}
-                                        onChange={(val) =>
-                                          setArticleData({
-                                            ...articleData,
-                                            content: val,
-                                          })
-                                        }
-                                        theme="snow"
-                                        modules={quillModules}
-                                      />
-                                    ) : (
-                                      <textarea
-                                        className={styles.textarea}
-                                        value={articleData.content}
-                                        onChange={(e) =>
-                                          setArticleData({
-                                            ...articleData,
-                                            content: e.target.value,
-                                          })
-                                        }
-                                        required
-                                      />
-                                    )}
-                                  </div>
+                                  <ArticleEditor
+                                    value={articleData.content}
+                                    onChange={(val) =>
+                                      setArticleData({
+                                        ...articleData,
+                                        content: val,
+                                      })
+                                    }
+                                  />
                                 </div>
 
                                 <div

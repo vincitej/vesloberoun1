@@ -248,99 +248,81 @@
   color: var(--color-gray-700);
 }
 
-.quill {
-  position: relative;
-}
-
-/* React Quill Editor Specific Overrides */
-.quill :global(.ql-container.ql-snow) {
-  border-color: var(--color-gray-300) !important;
+.editorWrapper {
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
   background: white;
-  border-radius: 0 0 var(--radius-md) var(--radius-md);
-  font-family: var(--font-sans); /* Ensure font consistency */
+  overflow: hidden;
 }
 
-.quill :global(.ql-toolbar.ql-snow) {
-  border-color: var(--color-gray-300) !important;
-  border-radius: var(--radius-md) var(--radius-md) 0 0;
+.editorToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px;
   background: var(--color-gray-50);
-  padding: 12px !important;
-  font-size: 16px !important;
-  overflow: visible !important;
+  border-bottom: 1px solid var(--color-gray-200);
 }
 
-.quill :global(.ql-toolbar.ql-snow .ql-formats) {
-  margin-right: 20px !important;
-}
-
-.quill :global(.ql-toolbar.ql-snow button),
-.quill :global(.ql-toolbar.ql-snow .ql-picker-label) {
-  width: 36px !important;
-  height: 36px !important;
-  padding: 6px !important;
-  position: relative;
-}
-
-.quill :global(.ql-toolbar.ql-snow button svg),
-.quill :global(.ql-toolbar.ql-snow .ql-picker-label svg) {
-  width: 20px !important;
-  height: 20px !important;
-}
-
-/* Tooltips for ReactQuill buttons */
-.quill :global(.ql-toolbar.ql-snow button):hover::after,
-.quill :global(.ql-toolbar.ql-snow .ql-picker-label):hover::after {
-  content: attr(title);
-  position: absolute;
-  bottom: -35px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.9);
-  color: white;
+.editorButton {
+  background: white;
+  border: 1px solid var(--color-gray-300);
+  border-radius: 8px;
   padding: 6px 10px;
-  border-radius: 4px;
-  font-size: 12px;
-  white-space: nowrap;
-  z-index: 1000;
-  pointer-events: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
-.quill :global(.ql-toolbar.ql-snow button):hover::before,
-.quill :global(.ql-toolbar.ql-snow .ql-picker-label):hover::before {
-  content: "";
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 5px solid transparent;
-  border-bottom-color: rgba(0, 0, 0, 0.9);
-  z-index: 1001;
-  pointer-events: none;
+.editorButton:hover {
+  border-color: var(--color-gray-400);
+  background: var(--color-gray-50);
 }
 
-.quill :global(.ql-toolbar.ql-snow button) {
-  position: relative;
+.editorButtonActive {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
 }
 
-.quill :global(.ql-snow .ql-picker) {
-  font-size: 15px !important;
+.editorColorInput {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
 }
 
-.quill :global(.ql-editor) {
-  color: var(--color-gray-900) !important;
-  min-height: 250px !important;
-  font-size: 15px !important;
+.editorContent {
+  min-height: 250px;
+  padding: 12px;
+  font-size: 15px;
+  color: var(--color-gray-900);
+  outline: none;
 }
 
-.quill :global(.ql-editor p) {
-  color: var(--color-gray-900) !important;
+.editorContent p {
   margin-bottom: 0.8em;
 }
 
-.quill :global(.ql-editor h1),
-.quill :global(.ql-editor h2),
-.quill :global(.ql-editor h3) {
-  color: var(--color-gray-900) !important;
+.editorContent img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.editorContent table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+}
+
+.editorContent th,
+.editorContent td {
+  border: 1px solid var(--color-gray-300);
+  padding: 8px;
+  text-align: left;
 }
 
 /* Admin Global Text Reset */
