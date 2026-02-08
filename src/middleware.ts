@@ -2,7 +2,9 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
-  const token = req.cookies.get("authjs.session-token");
+  const token =
+    req.cookies.get("__Secure-authjs.session-token") ||
+    req.cookies.get("authjs.session-token");
   const isLoggedIn = !!token;
   const isOnAdmin = req.nextUrl.pathname.startsWith("/admin");
   const isOnLogin = req.nextUrl.pathname.startsWith("/admin/login");
