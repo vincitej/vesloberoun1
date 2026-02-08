@@ -73,6 +73,7 @@ export async function POST(request: NextRequest) {
 
     revalidatePath("/aktuality");
     revalidatePath(`/aktuality/${slug}`);
+    revalidatePath("/");
 
     console.log("[API] Article created with ID:", id);
     return NextResponse.json({ id, success: true });
@@ -114,6 +115,7 @@ export async function PUT(request: NextRequest) {
       if (existing?.slug) revalidatePath(`/aktuality/${existing.slug}`);
     }
     revalidatePath("/aktuality");
+    revalidatePath("/");
     return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -143,6 +145,7 @@ export async function DELETE(request: NextRequest) {
     await deleteArticle(articleId);
     revalidatePath("/aktuality");
     if (existing?.slug) revalidatePath(`/aktuality/${existing.slug}`);
+    revalidatePath("/");
     return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

@@ -9,6 +9,9 @@ import styles from "./page.module.css";
 import { getAllArticles } from "@/lib/queries";
 import type { Article } from "@/lib/queries";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 async function getArticles(): Promise<Article[]> {
   try {
     return await getAllArticles();

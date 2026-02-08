@@ -70,6 +70,7 @@ function AdminContent() {
   const [expandedArticleId, setExpandedArticleId] = useState<number | null>(
     null,
   );
+  const [articleNotice, setArticleNotice] = useState<string | null>(null);
   const [articleData, setArticleData] = useState({
     title: "",
     slug: "",
@@ -112,6 +113,15 @@ function AdminContent() {
     Record<string, { label: string; url: string; isDownload: boolean }>
   >({});
   const [membershipUploading, setMembershipUploading] = useState(false);
+  const [membershipNotice, setMembershipNotice] = useState<string | null>(null);
+
+  const showNotice = (
+    setter: React.Dispatch<React.SetStateAction<string | null>>,
+    message: string,
+  ) => {
+    setter(message);
+    window.setTimeout(() => setter(null), 3000);
+  };
 
   // ReactQuill modules configuration
   const quillModules = {
@@ -356,24 +366,36 @@ function AdminContent() {
       image: articleData.image || "/images/placeholder.webp",
     };
 
+    const getErrorMessage = async (res: Response) => {
+      const data = await res.json().catch(() => ({}));
+      return data?.error || res.statusText || "Uložení se nezdařilo";
+    };
+
     try {
       if (editingArticleId) {
-        await fetch("/api/articles", {
+        const res = await fetch("/api/articles", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ id: editingArticleId, ...payload }),
         });
+        if (!res.ok) throw new Error(await getErrorMessage(res));
       } else {
-        await fetch("/api/articles", {
+        const res = await fetch("/api/articles", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
+        if (!res.ok) throw new Error(await getErrorMessage(res));
       }
+      showNotice(
+        setArticleNotice,
+        editingArticleId ? "Článek uložen." : "Článek byl přidán.",
+      );
       resetArticleForm();
       fetchData();
     } catch (error) {
-      alert("Chyba při ukládání");
+      const message = error instanceof Error ? error.message : null;
+      alert(message || "Chyba při ukládání");
     }
   };
 
@@ -486,41 +508,61 @@ function AdminContent() {
     const edits = sectionEdits[sectionId];
     if (!edits) return;
 
-    await fetch("/api/membership", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        type: "section",
-        id: sectionId,
-        title: edits.title,
-        description: edits.description,
-      }),
-    });
-    fetchData();
+    try {
+      const res = await fetch("/api/membership", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "section",
+          id: sectionId,
+          title: edits.title,
+          description: edits.description,
+        }),
+      });
+      if (!res.ok) throw new Error("Uložení se nezdařilo");
+      showNotice(setMembershipNotice, "Karta uložena.");
+      fetchData();
+    } catch (error) {
+      alert("Chyba při ukládání");
+    }
   };
 
   const saveMembershipLink = async (linkId: number) => {
     const edits = linkEdits[linkId];
     if (!edits) return;
 
-    await fetch("/api/membership", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        type: "link",
-        id: linkId,
-        label: edits.label,
-        url: edits.url,
-        isDownload: edits.isDownload,
-      }),
-    });
-    fetchData();
+    try {
+      const res = await fetch("/api/membership", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "link",
+          id: linkId,
+          label: edits.label,
+          url: edits.url,
+          isDownload: edits.isDownload,
+        }),
+      });
+      if (!res.ok) throw new Error("Uložení se nezdařilo");
+      showNotice(setMembershipNotice, "Odkaz uložen.");
+      fetchData();
+    } catch (error) {
+      alert("Chyba při ukládání");
+    }
   };
 
   const deleteMembershipLink = async (linkId: number) => {
     if (!confirm("Opravdu smazat odkaz?")) return;
-    await fetch(`/api/membership?id=${linkId}`, { method: "DELETE" });
-    fetchData();
+    try {
+      const res = await fetch(`/api/membership?id=${linkId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("Smazání se nezdařilo");
+      showNotice(setMembershipNotice, "Odkaz smazán.");
+      fetchData();
+    } catch (error) {
+      alert("Chyba při mazání");
+    }
   };
 
   const addMembershipLink = async (section: MembershipSection) => {
@@ -530,23 +572,28 @@ function AdminContent() {
       return;
     }
 
-    await fetch("/api/membership", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        sectionKey: section.key,
-        label: draft.label,
-        url: draft.url,
-        isDownload: draft.isDownload,
-        order: (section.links?.length ?? 0) + 1,
-      }),
-    });
-
-    setNewLinkDrafts((prev) => ({
-      ...prev,
-      [section.key]: { label: "", url: "", isDownload: false },
-    }));
-    fetchData();
+    try {
+      const res = await fetch("/api/membership", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sectionKey: section.key,
+          label: draft.label,
+          url: draft.url,
+          isDownload: draft.isDownload,
+          order: (section.links?.length ?? 0) + 1,
+        }),
+      });
+      if (!res.ok) throw new Error("Uložení se nezdařilo");
+      showNotice(setMembershipNotice, "Odkaz byl přidán.");
+      setNewLinkDrafts((prev) => ({
+        ...prev,
+        [section.key]: { label: "", url: "", isDownload: false },
+      }));
+      fetchData();
+    } catch (error) {
+      alert("Chyba při ukládání");
+    }
   };
 
   const uploadMembershipFile = async (sectionKey: string, file?: File) => {
@@ -580,7 +627,13 @@ function AdminContent() {
   const handleDelete = async (id: number, type: "articles" | "gallery") => {
     if (!confirm("Opravdu smazat?")) return;
     try {
-      await fetch(`/api/${type}?id=${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/${type}?id=${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Smazání se nezdařilo");
+      if (type === "articles") {
+        showNotice(setArticleNotice, "Článek smazán.");
+      } else {
+        showNotice(setGalleryNotice, "Album smazáno.");
+      }
       fetchData();
     } catch (e) {
       alert("Chyba při mazání");
@@ -607,6 +660,10 @@ function AdminContent() {
                 {articleFormOpen ? "Zrušit" : "+ Nový článek"}
               </button>
             </div>
+
+            {articleNotice && (
+              <div className={styles.notice}>{articleNotice}</div>
+            )}
 
             {articleFormOpen && (
               <form
@@ -1344,6 +1401,10 @@ function AdminContent() {
             <div className={styles.pageHeader}>
               <h1 className={styles.pageTitle}>Správa členství</h1>
             </div>
+
+            {membershipNotice && (
+              <div className={styles.notice}>{membershipNotice}</div>
+            )}
 
             {membershipSections.map((section) => {
               const sectionEdit = sectionEdits[section.id];
