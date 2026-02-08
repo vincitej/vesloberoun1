@@ -21,6 +21,9 @@ export const metadata = {
     "Informace o členství ve Veslařském klubu Beroun, tréninkové plány a příspěvky",
 };
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 async function getMembershipData() {
   try {
     return await getMembershipSections();

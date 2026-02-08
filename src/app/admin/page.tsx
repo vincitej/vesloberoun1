@@ -87,6 +87,7 @@ function AdminContent() {
   const [expandedGalleryId, setExpandedGalleryId] = useState<number | null>(
     null,
   );
+  const [galleryNotice, setGalleryNotice] = useState<string | null>(null);
   const [galleryData, setGalleryData] = useState({
     title: "",
     url: "",
@@ -401,7 +402,12 @@ function AdminContent() {
           method: "POST",
           body: formData,
         });
-        if (!uploadRes.ok) throw new Error("Upload failed");
+        if (!uploadRes.ok) {
+          const uploadError = await uploadRes
+            .json()
+            .catch(() => ({ error: "Upload failed" }));
+          throw new Error(uploadError.error || "Upload failed");
+        }
         const uploadData = await uploadRes.json();
         thumbPath = uploadData.url;
       }
@@ -413,23 +419,35 @@ function AdminContent() {
         year: parseInt(galleryData.year),
       };
 
+      const getErrorMessage = async (res: Response) => {
+        const data = await res.json().catch(() => ({}));
+        return data?.error || res.statusText || "Uložení se nezdařilo";
+      };
+
       if (editingGalleryId) {
-        await fetch("/api/gallery", {
+        const res = await fetch("/api/gallery", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ id: editingGalleryId, ...payload }),
         });
+        if (!res.ok) throw new Error(await getErrorMessage(res));
       } else {
-        await fetch("/api/gallery", {
+        const res = await fetch("/api/gallery", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
+        if (!res.ok) throw new Error(await getErrorMessage(res));
       }
+      setGalleryNotice(
+        editingGalleryId ? "Album upraveno." : "Album bylo přidáno.",
+      );
+      window.setTimeout(() => setGalleryNotice(null), 3000);
       resetGalleryForm();
       fetchData();
     } catch (error) {
-      alert("Chyba při ukládání");
+      const message = error instanceof Error ? error.message : null;
+      alert(message || "Chyba při ukládání");
     }
   };
 
@@ -1052,6 +1070,9 @@ function AdminContent() {
                 onSubmit={submitGallery}
                 className={`${styles.card} ${styles.formGrid}`}
               >
+                {galleryNotice && (
+                  <div className={styles.notice}>{galleryNotice}</div>
+                )}
                 <div className={styles.inputGroup}>
                   <label className={styles.label}>Název alba *</label>
                   <input

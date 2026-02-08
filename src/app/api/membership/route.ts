@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import {
   createMembershipLink,
@@ -8,7 +9,7 @@ import {
   updateMembershipSection,
 } from "@/lib/membershipQueries";
 
-export const revalidate = 60;
+export const revalidate = 0;
 
 export async function GET() {
   try {
@@ -44,6 +45,8 @@ export async function POST(request: NextRequest) {
       order: order ?? 0,
     });
 
+    revalidatePath("/clenstvi");
+
     return NextResponse.json({ id, success: true });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -69,6 +72,7 @@ export async function PUT(request: NextRequest) {
         );
       }
       await updateMembershipSection(id, { title, description, order });
+      revalidatePath("/clenstvi");
       return NextResponse.json({ success: true });
     }
 
@@ -83,6 +87,7 @@ export async function PUT(request: NextRequest) {
         is_download: isDownload,
         order,
       });
+      revalidatePath("/clenstvi");
       return NextResponse.json({ success: true });
     }
 
@@ -107,6 +112,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     await deleteMembershipLink(parseInt(id));
+    revalidatePath("/clenstvi");
     return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

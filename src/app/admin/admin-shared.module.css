@@ -122,6 +122,15 @@
   box-shadow: 0 0 0 3px rgba(42, 67, 145, 0.1);
 }
 
+.notice {
+  background: #ecfdf3;
+  border: 1px solid #a7f3d0;
+  color: #065f46;
+  padding: var(--spacing-3) var(--spacing-4);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+}
+
 /* Table styles */
 .tableWrapper {
   overflow-x: auto;
