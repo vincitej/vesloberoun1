@@ -13,6 +13,8 @@ interface ArticlePreviewProps {
  * Náhled článku pro výpis aktualit
  */
 export default function ArticlePreview({ article }: ArticlePreviewProps) {
+  const hasImage =
+    !!article.image && article.image !== "/images/placeholder.webp";
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("cs-CZ", {
@@ -37,7 +39,7 @@ export default function ArticlePreview({ article }: ArticlePreviewProps) {
     <Card hover className={styles.card}>
       <Link href={`/aktuality/${article.slug}`} className={styles.articleLink}>
         <div className={styles.articlePreview}>
-          {article.image && (
+          {hasImage && (
             <div className={styles.imageContainer}>
               <Image
                 src={article.image}
@@ -57,6 +59,13 @@ export default function ArticlePreview({ article }: ArticlePreviewProps) {
             </div>
           )}
           <div className={styles.content}>
+            {!hasImage && (
+              <span
+                className={`${styles.categoryInline} ${styles[article.category]}`}
+              >
+                {getCategoryLabel(article.category)}
+              </span>
+            )}
             <div className={styles.meta}>
               <span className={styles.date}>{formatDate(article.date)}</span>
               <span className={styles.author}>• {article.author}</span>
