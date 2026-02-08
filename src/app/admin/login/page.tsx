@@ -2,12 +2,10 @@
 
 import { signIn } from "next-auth/react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import styles from "./login.module.css";
 
 export default function LoginPage() {
-  const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -28,8 +26,7 @@ export default function LoginPage() {
       if (result?.error) {
         setError("Neplatné přihlašovací údaje");
       } else {
-        router.push("/admin");
-        router.refresh();
+        window.location.href = "/admin";
       }
     } catch (err) {
       setError("Chyba při přihlašování");
