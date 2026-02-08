@@ -1,5 +1,3 @@
--- Gallery import from sqlite
-BEGIN;
 INSERT INTO gallery (title, url, thumbnail, year, "order") VALUES ('Žaba', 'https://eu.zonerama.com/Link/Album/14260197', '/images/gallery/p1300073-1764846717515.JPG', 2025, 1);
 INSERT INTO gallery (title, url, thumbnail, year, "order") VALUES ('Smíchovská regata', 'https://eu.zonerama.com/Link/Album/13905640', '/images/gallery/p1290842-1764847388902.JPG', 2025, 2);
 INSERT INTO gallery (title, url, thumbnail, year, "order") VALUES ('Polabský pohár - Brandýs n. L. ', 'https://eu.zonerama.com/Link/Album/13862178', '/images/gallery/p1290580-1764847488503.JPG', 2025, 3);
@@ -351,4 +349,3 @@ INSERT INTO gallery (title, url, thumbnail, year, "order") VALUES ('Zimní soust
 INSERT INTO gallery (title, url, thumbnail, year, "order") VALUES ('Trojskif', 'https://www.rajce.idnes.cz/vesloberoun/album/prvni-trojskif-u-nas', '/images/gallery/img00001--12--1765695654694.jpg', 2011, 349);
 INSERT INTO gallery (title, url, thumbnail, year, "order") VALUES ('Vánoční veslování', 'https://eu.zonerama.com/fotovinci/Album/14401387', '/images/gallery/p1310461-1769432866906.jpg', 2025, 350);
 INSERT INTO gallery (title, url, thumbnail, year, "order") VALUES ('Vánoční veslování 2', 'https://www.rajce.idnes.cz/vesloberoun/album/vanocni-veslovani-2025', '/images/gallery/dsc-0006-1769432924812.jpg', 2025, 351);
-COMMIT;
