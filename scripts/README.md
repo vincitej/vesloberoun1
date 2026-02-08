@@ -19,3 +19,7 @@ DO UPDATE SET password_hash = EXCLUDED.password_hash
 ```
 
 Poznamka: `username` musi byt unikatni.
+
+`r.sehnoutkova` rs99beroun
+
+`admin` admin26vkk
