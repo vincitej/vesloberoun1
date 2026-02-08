@@ -683,6 +683,166 @@ function AdminContent() {
     }
   };
 
+  const galleryByYear = galleryImages.reduce(
+    (acc, img) => {
+      const year = img.year;
+      if (!acc[year]) acc[year] = [];
+      acc[year].push(img);
+      return acc;
+    },
+    {} as Record<number, GalleryImage[]>,
+  );
+
+  const sortedGalleryYears = Object.keys(galleryByYear)
+    .map(Number)
+    .sort((a, b) => b - a);
+
+  const renderGalleryCard = (img: GalleryImage) => (
+    <div key={img.id} className={styles.galleryCard}>
+      <img
+        src={img.thumbnail}
+        alt={img.title}
+        className={styles.galleryThumbnail}
+      />
+      <div className={styles.galleryContent}>
+        {expandedGalleryId === img.id ? (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              submitGallery(e);
+              setExpandedGalleryId(null);
+            }}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "12px",
+            }}
+          >
+            <div className={styles.inputGroup}>
+              <label className={styles.label}>Název alba *</label>
+              <input
+                className={styles.input}
+                value={galleryData.title}
+                onChange={(e) =>
+                  setGalleryData({
+                    ...galleryData,
+                    title: e.target.value,
+                  })
+                }
+                required
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              <label className={styles.label}>URL *</label>
+              <input
+                className={styles.input}
+                value={galleryData.url}
+                onChange={(e) =>
+                  setGalleryData({
+                    ...galleryData,
+                    url: e.target.value,
+                  })
+                }
+                required
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              <label className={styles.label}>Rok *</label>
+              <input
+                type="number"
+                className={styles.input}
+                value={galleryData.year}
+                onChange={(e) =>
+                  setGalleryData({
+                    ...galleryData,
+                    year: e.target.value,
+                  })
+                }
+                required
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              <label className={styles.label}>Thumbnail</label>
+              <input
+                type="file"
+                className={styles.input}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setThumbnailFile(file);
+                    const reader = new FileReader();
+                    reader.onloadend = () =>
+                      setGalleryData((p) => ({
+                        ...p,
+                        thumbnail: reader.result as string,
+                      }));
+                    reader.readAsDataURL(file);
+                  }
+                }}
+              />
+            </div>
+            <div
+              style={{
+                display: "flex",
+                gap: "8px",
+                marginTop: "8px",
+              }}
+            >
+              <button
+                type="submit"
+                className={styles.primaryBtn}
+                style={{ flex: 1, padding: "8px" }}
+              >
+                Uložit
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setExpandedGalleryId(null);
+                  setEditingGalleryId(null);
+                  resetGalleryForm();
+                }}
+                className={styles.secondaryBtn}
+                style={{ flex: 1, padding: "8px" }}
+              >
+                Zrušit
+              </button>
+            </div>
+          </form>
+        ) : (
+          <>
+            <h3 className={styles.galleryTitle}>{img.title}</h3>
+            <p>{img.year}</p>
+            <div className={styles.galleryActions}>
+              <button
+                className={styles.secondaryBtn}
+                onClick={() => {
+                  setEditingGalleryId(img.id);
+                  setExpandedGalleryId(img.id);
+                  setGalleryData({
+                    title: img.title,
+                    url: img.url,
+                    thumbnail: img.thumbnail,
+                    year: img.year.toString(),
+                  });
+                  setThumbnailFile(null);
+                }}
+              >
+                Upravit
+              </button>
+              <button
+                className={styles.dangerBtn}
+                onClick={() => handleDelete(img.id, "gallery")}
+              >
+                Smazat
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+
   const addMembershipLink = async (section: MembershipSection) => {
     const draft = newLinkDrafts[section.key];
     if (!draft?.label || !draft?.url) {
@@ -1325,155 +1485,18 @@ function AdminContent() {
               </form>
             )}
 
-            <div className={styles.galleryGrid}>
-              {galleryImages.map((img) => (
-                <div key={img.id} className={styles.galleryCard}>
-                  <img
-                    src={img.thumbnail}
-                    alt={img.title}
-                    className={styles.galleryThumbnail}
-                  />
-                  <div className={styles.galleryContent}>
-                    {expandedGalleryId === img.id ? (
-                      // Inline edit form
-                      <form
-                        onSubmit={(e) => {
-                          e.preventDefault();
-                          submitGallery(e);
-                          setExpandedGalleryId(null);
-                        }}
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: "12px",
-                        }}
-                      >
-                        <div className={styles.inputGroup}>
-                          <label className={styles.label}>Název alba *</label>
-                          <input
-                            className={styles.input}
-                            value={galleryData.title}
-                            onChange={(e) =>
-                              setGalleryData({
-                                ...galleryData,
-                                title: e.target.value,
-                              })
-                            }
-                            required
-                          />
-                        </div>
-                        <div className={styles.inputGroup}>
-                          <label className={styles.label}>URL *</label>
-                          <input
-                            className={styles.input}
-                            value={galleryData.url}
-                            onChange={(e) =>
-                              setGalleryData({
-                                ...galleryData,
-                                url: e.target.value,
-                              })
-                            }
-                            required
-                          />
-                        </div>
-                        <div className={styles.inputGroup}>
-                          <label className={styles.label}>Rok *</label>
-                          <input
-                            type="number"
-                            className={styles.input}
-                            value={galleryData.year}
-                            onChange={(e) =>
-                              setGalleryData({
-                                ...galleryData,
-                                year: e.target.value,
-                              })
-                            }
-                            required
-                          />
-                        </div>
-                        <div className={styles.inputGroup}>
-                          <label className={styles.label}>Thumbnail</label>
-                          <input
-                            type="file"
-                            className={styles.input}
-                            onChange={(e) => {
-                              const file = e.target.files?.[0];
-                              if (file) {
-                                setThumbnailFile(file);
-                                const reader = new FileReader();
-                                reader.onloadend = () =>
-                                  setGalleryData((p) => ({
-                                    ...p,
-                                    thumbnail: reader.result as string,
-                                  }));
-                                reader.readAsDataURL(file);
-                              }
-                            }}
-                          />
-                        </div>
-                        <div
-                          style={{
-                            display: "flex",
-                            gap: "8px",
-                            marginTop: "8px",
-                          }}
-                        >
-                          <button
-                            type="submit"
-                            className={styles.primaryBtn}
-                            style={{ flex: 1, padding: "8px" }}
-                          >
-                            Uložit
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setExpandedGalleryId(null);
-                              setEditingGalleryId(null);
-                              resetGalleryForm();
-                            }}
-                            className={styles.secondaryBtn}
-                            style={{ flex: 1, padding: "8px" }}
-                          >
-                            Zrušit
-                          </button>
-                        </div>
-                      </form>
-                    ) : (
-                      // Normal card view
-                      <>
-                        <h3 className={styles.galleryTitle}>{img.title}</h3>
-                        <p>{img.year}</p>
-                        <div className={styles.galleryActions}>
-                          <button
-                            className={styles.secondaryBtn}
-                            onClick={() => {
-                              setEditingGalleryId(img.id);
-                              setExpandedGalleryId(img.id);
-                              setGalleryData({
-                                title: img.title,
-                                url: img.url,
-                                thumbnail: img.thumbnail,
-                                year: img.year.toString(),
-                              });
-                              setThumbnailFile(null);
-                            }}
-                          >
-                            Upravit
-                          </button>
-                          <button
-                            className={styles.dangerBtn}
-                            onClick={() => handleDelete(img.id, "gallery")}
-                          >
-                            Smazat
-                          </button>
-                        </div>
-                      </>
-                    )}
+            {sortedGalleryYears.length === 0 ? (
+              <div className={styles.empty}>Zatím nejsou žádná alba.</div>
+            ) : (
+              sortedGalleryYears.map((year) => (
+                <div key={year} className={styles.galleryYearSection}>
+                  <h2 className={styles.galleryYearHeading}>{year}</h2>
+                  <div className={styles.galleryGrid}>
+                    {galleryByYear[year].map((img) => renderGalleryCard(img))}
                   </div>
                 </div>
-              ))}
-            </div>
+              ))
+            )}
           </>
         )}
 

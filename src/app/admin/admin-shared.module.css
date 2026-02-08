@@ -374,3 +374,14 @@
   gap: var(--spacing-2);
   margin-top: var(--spacing-4);
 }
+
+.galleryYearSection {
+  margin-bottom: var(--spacing-10);
+}
+
+.galleryYearHeading {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--color-gray-900);
+  margin-bottom: var(--spacing-4);
+}
