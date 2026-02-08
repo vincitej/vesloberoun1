@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
+import * as ReactDOM from "react-dom";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
@@ -10,6 +11,7 @@ import AdminNav from "@/components/AdminNav/AdminNav";
 import Image from "next/image";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+const canUseQuill = typeof ReactDOM.findDOMNode === "function";
 
 // Interfaces
 interface Article {
@@ -662,14 +664,28 @@ function AdminContent() {
                 <div className={styles.inputGroup}>
                   <label className={styles.label}>Obsah *</label>
                   <div className={styles.quill}>
-                    <ReactQuill
-                      value={articleData.content}
-                      onChange={(val) =>
-                        setArticleData({ ...articleData, content: val })
-                      }
-                      theme="snow"
-                      modules={quillModules}
-                    />
+                    {canUseQuill ? (
+                      <ReactQuill
+                        value={articleData.content}
+                        onChange={(val) =>
+                          setArticleData({ ...articleData, content: val })
+                        }
+                        theme="snow"
+                        modules={quillModules}
+                      />
+                    ) : (
+                      <textarea
+                        className={styles.textarea}
+                        value={articleData.content}
+                        onChange={(e) =>
+                          setArticleData({
+                            ...articleData,
+                            content: e.target.value,
+                          })
+                        }
+                        required
+                      />
+                    )}
                   </div>
                 </div>
 
@@ -910,17 +926,31 @@ function AdminContent() {
                                     Obsah *
                                   </label>
                                   <div className={styles.quill}>
-                                    <ReactQuill
-                                      value={articleData.content}
-                                      onChange={(val) =>
-                                        setArticleData({
-                                          ...articleData,
-                                          content: val,
-                                        })
-                                      }
-                                      theme="snow"
-                                      modules={quillModules}
-                                    />
+                                    {canUseQuill ? (
+                                      <ReactQuill
+                                        value={articleData.content}
+                                        onChange={(val) =>
+                                          setArticleData({
+                                            ...articleData,
+                                            content: val,
+                                          })
+                                        }
+                                        theme="snow"
+                                        modules={quillModules}
+                                      />
+                                    ) : (
+                                      <textarea
+                                        className={styles.textarea}
+                                        value={articleData.content}
+                                        onChange={(e) =>
+                                          setArticleData({
+                                            ...articleData,
+                                            content: e.target.value,
+                                          })
+                                        }
+                                        required
+                                      />
+                                    )}
                                   </div>
                                 </div>
 
