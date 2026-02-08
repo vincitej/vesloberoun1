@@ -51,18 +51,6 @@
   color: var(--color-gray-900);
 }
 
-.categoryInline {
-  align-self: flex-start;
-  margin-bottom: var(--spacing-3);
-  padding: var(--spacing-2) var(--spacing-3);
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-  text-transform: uppercase;
-  background-color: rgba(255, 255, 255, 0.9);
-  color: var(--color-gray-900);
-}
-
 .category.zavod {
   background-color: var(--color-primary);
   color: var(--color-white);
@@ -142,7 +130,9 @@
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-2);
-  transition: color var(--transition-fast), transform var(--transition-fast);
+  transition:
+    color var(--transition-fast),
+    transform var(--transition-fast);
 }
 
 .articleLink:hover .readMore {

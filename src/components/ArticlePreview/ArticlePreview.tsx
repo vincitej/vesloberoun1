@@ -15,6 +15,34 @@ interface ArticlePreviewProps {
 export default function ArticlePreview({ article }: ArticlePreviewProps) {
   const hasImage =
     !!article.image && article.image !== "/images/placeholder.webp";
+  const placeholderPools: Record<string, string[]> = {
+    akce: ["/images/tym.webp", "/images/lodenice.webp", "/images/treneri.webp"],
+    treninky: [
+      "/images/trener.webp",
+      "/images/bazen.webp",
+      "/images/rozvoj.webp",
+    ],
+    uspech: [
+      "/images/laska.webp",
+      "/images/material.webp",
+      "/images/adresa.webp",
+    ],
+    zavody: ["/images/material.webp", "/images/rozvoj.webp"],
+    novinky: ["/images/tym.webp", "/images/adresa.webp"],
+  };
+  const placeholderFallback = "/images/tym.webp";
+
+  const pickPlaceholder = () => {
+    const pool = placeholderPools[article.category] ?? [placeholderFallback];
+    const seed = article.id ?? article.slug ?? "0";
+    const hash = seed
+      .toString()
+      .split("")
+      .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return pool[hash % pool.length] ?? placeholderFallback;
+  };
+
+  const imageSrc = hasImage ? article.image : pickPlaceholder();
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("cs-CZ", {
@@ -39,33 +67,22 @@ export default function ArticlePreview({ article }: ArticlePreviewProps) {
     <Card hover className={styles.card}>
       <Link href={`/aktuality/${article.slug}`} className={styles.articleLink}>
         <div className={styles.articlePreview}>
-          {hasImage && (
-            <div className={styles.imageContainer}>
-              <Image
-                src={article.image}
-                alt={article.title}
-                width={600}
-                height={400}
-                className={styles.image}
-                placeholder="blur"
-                blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
-                unoptimized
-              />
-              <span
-                className={`${styles.category} ${styles[article.category]}`}
-              >
-                {getCategoryLabel(article.category)}
-              </span>
-            </div>
-          )}
+          <div className={styles.imageContainer}>
+            <Image
+              src={imageSrc}
+              alt={article.title}
+              width={600}
+              height={400}
+              className={styles.image}
+              placeholder="blur"
+              blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+              unoptimized={hasImage}
+            />
+            <span className={`${styles.category} ${styles[article.category]}`}>
+              {getCategoryLabel(article.category)}
+            </span>
+          </div>
           <div className={styles.content}>
-            {!hasImage && (
-              <span
-                className={`${styles.categoryInline} ${styles[article.category]}`}
-              >
-                {getCategoryLabel(article.category)}
-              </span>
-            )}
             <div className={styles.meta}>
               <span className={styles.date}>{formatDate(article.date)}</span>
               <span className={styles.author}>• {article.author}</span>
