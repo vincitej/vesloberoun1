@@ -20,6 +20,10 @@ DO UPDATE SET password_hash = EXCLUDED.password_hash
 
 Poznamka: `username` musi byt unikatni.
 
-`r.sehnoutkova` rs99beroun
+3. Přístupové údaje:
+
+`r.sehnoutkova` `rs99beroun`
+
+`j.sehnoutka` `js99beroun`
 
 `admin` admin26vkk

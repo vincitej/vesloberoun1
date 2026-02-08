@@ -15,19 +15,19 @@ export default function AdminNav() {
 
   const navItems = [
     {
-      label: "Články",
+      label: "/aktuality",
       href: "/admin?view=articles",
       icon: "📝",
       view: "articles",
     },
     {
-      label: "Galerie",
+      label: "/galerie",
       href: "/admin?view=gallery",
       icon: "🖼️",
       view: "gallery",
     },
     {
-      label: "Členství",
+      label: "/clenstvi",
       href: "/admin?view=membership",
       icon: "📎",
       view: "membership",

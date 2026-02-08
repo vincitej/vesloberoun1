@@ -232,6 +232,17 @@
   font-size: 13px;
 }
 
+.adminImagePreview {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  max-height: 220px;
+  object-fit: contain;
+  margin-top: 10px;
+  border-radius: 8px;
+  background: var(--color-gray-50);
+}
+
 /* Text Color Overrides for Admin (Light Theme) */
 .card p,
 .card li,

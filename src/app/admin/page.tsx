@@ -210,14 +210,14 @@ function ArticleEditor({ value, onChange }: ArticleEditorProps) {
           className={styles.editorButton}
           onClick={() => editor.chain().focus().toggleBulletList().run()}
         >
-          • List
+          • Odrážky
         </button>
         <button
           type="button"
           className={styles.editorButton}
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
         >
-          1. List
+          1. Číslování
         </button>
         <input
           type="color"
@@ -930,7 +930,7 @@ function AdminContent() {
         {view === "articles" && (
           <>
             <div className={styles.pageHeader}>
-              <h1 className={styles.pageTitle}>Správa článků</h1>
+              <h1 className={styles.pageTitle}>Správa sekce /aktuality</h1>
               <button
                 onClick={() => setArticleFormOpen(!articleFormOpen)}
                 className={styles.primaryBtn}
@@ -1385,7 +1385,7 @@ function AdminContent() {
         {view === "gallery" && (
           <>
             <div className={styles.pageHeader}>
-              <h1 className={styles.pageTitle}>Správa galerie</h1>
+              <h1 className={styles.pageTitle}>Správa sekce /galerie</h1>
               <button
                 onClick={() => setGalleryFormOpen(!galleryFormOpen)}
                 className={styles.primaryBtn}
@@ -1437,7 +1437,7 @@ function AdminContent() {
                   />
                 </div>
                 <div className={styles.inputGroup}>
-                  <label className={styles.label}>Thumbnail</label>
+                  <label className={styles.label}>Náhledový obrázek</label>
                   <input
                     type="file"
                     className={styles.input}
@@ -1459,7 +1459,7 @@ function AdminContent() {
                     <img
                       src={galleryData.thumbnail}
                       alt="Preview"
-                      style={{ height: 100, marginTop: 10, borderRadius: 8 }}
+                      className={styles.adminImagePreview}
                     />
                   )}
                 </div>
@@ -1504,7 +1504,7 @@ function AdminContent() {
         {view === "membership" && (
           <>
             <div className={styles.pageHeader}>
-              <h1 className={styles.pageTitle}>Správa členství</h1>
+              <h1 className={styles.pageTitle}>Správa sekce /clenstvi</h1>
             </div>
 
             {membershipNotice && (
