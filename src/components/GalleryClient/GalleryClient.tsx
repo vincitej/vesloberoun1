@@ -117,6 +117,7 @@ export default function GalleryClient({ images }: GalleryClientProps) {
                       className={styles.thumbnail}
                       placeholder="blur"
                       blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+                      unoptimized
                     />
                     <div className={styles.overlay}>
                       <span className={styles.clickHint}>🔗 {image.title}</span>
