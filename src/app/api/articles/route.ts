@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import {
   getAllArticles,
@@ -8,8 +9,7 @@ import {
   deleteArticle,
 } from "@/lib/queries";
 
-// Revalidace každých 60 sekund
-export const revalidate = 60;
+export const revalidate = 0;
 
 // GET - seznam všech článků
 export async function GET() {
@@ -71,6 +71,9 @@ export async function POST(request: NextRequest) {
       category,
     });
 
+    revalidatePath("/aktuality");
+    revalidatePath(`/aktuality/${slug}`);
+
     console.log("[API] Article created with ID:", id);
     return NextResponse.json({ id, success: true });
   } catch (error: any) {
@@ -103,6 +106,14 @@ export async function PUT(request: NextRequest) {
     }
 
     await updateArticle(id, updates);
+    const updatedSlug = updates.slug as string | undefined;
+    if (updatedSlug) {
+      revalidatePath(`/aktuality/${updatedSlug}`);
+    } else {
+      const existing = await getArticleById(id);
+      if (existing?.slug) revalidatePath(`/aktuality/${existing.slug}`);
+    }
+    revalidatePath("/aktuality");
     return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -127,7 +138,11 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    await deleteArticle(parseInt(id));
+    const articleId = parseInt(id);
+    const existing = await getArticleById(articleId);
+    await deleteArticle(articleId);
+    revalidatePath("/aktuality");
+    if (existing?.slug) revalidatePath(`/aktuality/${existing.slug}`);
     return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

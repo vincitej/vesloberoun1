@@ -13,6 +13,9 @@ export const metadata = {
   description: "Nejnovější zprávy a aktuality z Veslařského klubu Beroun",
 };
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 async function getArticles(): Promise<Article[]> {
   try {
     return await getAllArticles();

@@ -6,6 +6,9 @@ import styles from "./page.module.css";
 import { getAllArticles } from "@/lib/queries";
 import type { Article } from "@/lib/queries";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 type ArticlePageProps = {
   params: Promise<{
     slug: string;
@@ -19,13 +22,6 @@ async function getArticles(): Promise<Article[]> {
     console.error("Failed to fetch articles", err);
     return [];
   }
-}
-
-export async function generateStaticParams() {
-  const articles = await getArticles();
-  return articles.map((article) => ({
-    slug: article.slug,
-  }));
 }
 
 export async function generateMetadata({ params }: ArticlePageProps) {
